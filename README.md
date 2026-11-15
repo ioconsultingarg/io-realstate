@@ -16,7 +16,8 @@ Etapa: **demo vendible** (14/11/2026): una app navegable con datos ficticios, si
 ## Demo
 
 Recorrido de una inmobiliaria ficticia: la consulta de las 23:14 atendida y agendada, la bandeja de
-clientes con la calificación hecha por el agente, el asistente interno (tasación con informe para firmar,
+clientes con la calificación hecha por el agente, las búsquedas de clientes compradores con avisos de los portales
+y el borrador del mensaje en la voz del asesor, el asistente interno (tasación con informe para firmar,
 análisis de competencia y práctica de objeciones), el catálogo de agentes y el cerebro.
 
 ```bash
@@ -46,6 +47,9 @@ como fuente en la configuración de Pages del repo).
    quién hace qué, guía para recorrer la demo y qué simula.
 8. [08-FACTIBILIDAD-E2E.md](08-FACTIBILIDAD-E2E.md) — **implementación real**: qué es factible hoy y qué no,
    arquitectura, cuentas y trámites, datos, costos y precios revisados, plan de 13 semanas, legal y riesgos.
+9. [09-ASESOR-INDIVIDUAL.md](09-ASESOR-INDIVIDUAL.md) — **plan para el asesor individual** (pedido de un agente
+   en actividad): búsquedas que avisan con las alertas de los portales, borradores en su voz, ACM, agenda y
+   tareas. MVP de 5 a 7 semanas.
 
 ## En una línea
 

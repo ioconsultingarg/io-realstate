@@ -28,6 +28,10 @@ FIGURAS = {
         ('asistente-tasacion', 'Pedido de tasación al asistente: el agente devuelve el rango y los comparables.'),
         ('informe-acm', 'El informe con la marca de la inmobiliaria, en borrador hasta que firma la corredora.'),
     ],
+    '## 8 bis.': [
+        ('busquedas', 'Pantalla Búsquedas: los criterios del cliente y lo que encontró el agente, ordenado por afinidad.'),
+        ('busquedas-borrador', 'El borrador del mensaje al cliente, escrito como escribe la asesora. Lo manda ella.'),
+    ],
     '## 9.': [('agentes', 'Pantalla Agentes: el catálogo, con los que están activos y los que vienen.')],
     '## 10.': [('cerebro', 'Pantalla Cerebro: los 10 temas y la cartera sincronizada.'), ('movil-hoy', 'La misma demo en el celular.')],
 }

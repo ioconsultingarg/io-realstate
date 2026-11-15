@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { BookOpen, Brain, ExternalLink, Info, LayoutDashboard, MessagesSquare, Moon, Sparkles, Sun, UsersRound, type LucideIcon } from 'lucide-react'
+import { BookOpen, Brain, ExternalLink, Info, LayoutDashboard, MessagesSquare, Moon, SearchCheck, Sparkles, Sun, UsersRound, type LucideIcon } from 'lucide-react'
 import { conversaciones, inmobiliaria, usuaria } from '../data/demo'
 import type { Ruta } from '../lib/ruta'
 import { useTema } from '../lib/tema'
@@ -16,6 +16,7 @@ interface ItemNav {
 const navegacion: ItemNav[] = [
   { ruta: 'hoy', href: '#/', etiqueta: 'Hoy', Icono: LayoutDashboard },
   { ruta: 'conversaciones', href: '#/conversaciones', etiqueta: 'Clientes', Icono: MessagesSquare },
+  { ruta: 'busquedas', href: '#/busquedas', etiqueta: 'Búsquedas', Icono: SearchCheck },
   { ruta: 'asistente', href: '#/asistente', etiqueta: 'Asistente', Icono: Sparkles },
   { ruta: 'agentes', href: '#/agentes', etiqueta: 'Agentes', Icono: UsersRound },
   { ruta: 'cerebro', href: '#/cerebro', etiqueta: 'Cerebro', Icono: Brain },
@@ -108,7 +109,7 @@ export function Shell({ ruta, children }: { ruta: Ruta; children: ReactNode }) {
 
       {/* Barra inferior: celular */}
       <nav aria-label="Principal" className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
-        <ul className="grid grid-cols-5">
+        <ul className="grid grid-cols-6">
           {navegacion.map((item) => {
             const actual = item.ruta === ruta
             return (

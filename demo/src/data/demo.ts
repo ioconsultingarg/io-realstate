@@ -330,3 +330,207 @@ export const roleplay = {
   ],
   sugerencia: 'Bien arrancado. Sumá un dato: "nuestros PH en la zona se vendieron en 63 días de mediana" y cerrá con "¿te muestro cómo quedaría la publicación del tuyo?".',
 }
+
+/* ——— Búsquedas (plan del asesor individual) ——— */
+
+export type Portal = 'Zonaprop' | 'Argenprop' | 'Mercado Libre' | 'Colega'
+
+export interface Criterio {
+  texto: string
+  tipo: 'obligatorio' | 'deseable'
+}
+
+export interface Aviso {
+  id: string
+  direccion: string
+  barrio: string
+  detalle: string
+  usd: number
+  afinidad: number
+  fuentes: Portal[]
+  publicadoPor: string
+  llego: string
+  motivos: { ok: boolean | null; texto: string }[]
+}
+
+export interface Busqueda {
+  id: string
+  cliente: string
+  contacto: string
+  resumen: string
+  criterios: Criterio[]
+  alertas: Portal[]
+  desde: string
+  avisos: Aviso[]
+  descartadosPorCriterio: number
+}
+
+export const busquedas: Busqueda[] = [
+  {
+    id: 'ocampo',
+    cliente: 'Familia Ocampo',
+    contacto: 'Mariana',
+    resumen: '4 amb con patio o terraza · hasta USD 300 k',
+    criterios: [
+      { texto: '4 ambientes', tipo: 'obligatorio' },
+      { texto: 'Patio o terraza', tipo: 'obligatorio' },
+      { texto: 'Villa Urquiza o Coghlan', tipo: 'obligatorio' },
+      { texto: 'Hasta USD 300.000', tipo: 'obligatorio' },
+      { texto: 'Cerca del colegio (Monroe y Bauness)', tipo: 'deseable' },
+      { texto: 'Cochera', tipo: 'deseable' },
+      { texto: 'Sin escaleras largas', tipo: 'deseable' },
+    ],
+    alertas: ['Zonaprop', 'Argenprop', 'Mercado Libre'],
+    desde: 'hace 12 días',
+    descartadosPorCriterio: 5,
+    avisos: [
+      {
+        id: 'melian',
+        direccion: 'Melián 3120',
+        barrio: 'Coghlan',
+        detalle: '4 amb · 118 m² · terraza propia · 2.º piso por ascensor',
+        usd: 289000,
+        afinidad: 92,
+        fuentes: ['Zonaprop', 'Argenprop'],
+        publicadoPor: 'publicada por 2 inmobiliarias',
+        llego: 'hoy 07:12',
+        motivos: [
+          { ok: true, texto: 'Terraza propia de 30 m²' },
+          { ok: true, texto: 'A 4 cuadras del colegio' },
+          { ok: true, texto: 'Dentro del presupuesto' },
+          { ok: false, texto: 'Sin cochera' },
+        ],
+      },
+      {
+        id: 'pedraza',
+        direccion: 'Pedraza 2450',
+        barrio: 'Villa Urquiza',
+        detalle: 'PH 4 amb · 125 m² · patio · sin expensas',
+        usd: 262000,
+        afinidad: 85,
+        fuentes: ['Mercado Libre'],
+        publicadoPor: 'publicado por el dueño',
+        llego: 'hoy 06:40',
+        motivos: [
+          { ok: true, texto: 'Patio de 22 m²' },
+          { ok: true, texto: 'Precio holgado: USD 38 k por debajo' },
+          { ok: null, texto: 'Escalera al primer piso (21 escalones)' },
+          { ok: false, texto: 'Sin cochera' },
+        ],
+      },
+      {
+        id: 'monroe',
+        direccion: 'Monroe 4880',
+        barrio: 'Villa Urquiza',
+        detalle: '4 amb · 105 m² · balcón · cochera',
+        usd: 305000,
+        afinidad: 58,
+        fuentes: ['Zonaprop'],
+        publicadoPor: 'publicada por 1 inmobiliaria',
+        llego: 'ayer 21:30',
+        motivos: [
+          { ok: true, texto: 'Cochera fija' },
+          { ok: false, texto: 'Balcón, no patio ni terraza' },
+          { ok: false, texto: 'USD 5 k arriba del presupuesto' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'lucia',
+    cliente: 'Lucía Benítez',
+    contacto: 'Lucía',
+    resumen: '3 amb apto crédito · Belgrano · USD 180–210 k',
+    criterios: [
+      { texto: '3 ambientes', tipo: 'obligatorio' },
+      { texto: 'Apto crédito', tipo: 'obligatorio' },
+      { texto: 'Belgrano', tipo: 'obligatorio' },
+      { texto: 'USD 180.000 a 210.000', tipo: 'obligatorio' },
+      { texto: 'Balcón', tipo: 'deseable' },
+      { texto: 'Cerca del subte D', tipo: 'deseable' },
+    ],
+    alertas: ['Zonaprop', 'Argenprop'],
+    desde: 'hace 3 días',
+    descartadosPorCriterio: 3,
+    avisos: [
+      {
+        id: 'juramento',
+        direccion: 'Juramento 2655',
+        barrio: 'Belgrano',
+        detalle: '3 amb · 71 m² · balcón aterrazado · apto crédito',
+        usd: 205000,
+        afinidad: 88,
+        fuentes: ['Argenprop', 'Colega'],
+        publicadoPor: 'la tiene un colega de la red',
+        llego: 'hoy 08:05',
+        motivos: [
+          { ok: true, texto: 'Apto crédito confirmado en el aviso' },
+          { ok: true, texto: 'A 2 cuadras de la estación Juramento' },
+          { ok: null, texto: 'Cerca del techo del presupuesto' },
+        ],
+      },
+      {
+        id: 'mendoza',
+        direccion: 'Mendoza 2140',
+        barrio: 'Belgrano',
+        detalle: '3 amb · 68 m² · contrafrente',
+        usd: 189000,
+        afinidad: 71,
+        fuentes: ['Zonaprop'],
+        publicadoPor: 'publicada por 1 inmobiliaria',
+        llego: 'ayer 19:12',
+        motivos: [
+          { ok: true, texto: 'Buen precio para la zona' },
+          { ok: false, texto: 'Sin balcón' },
+          { ok: null, texto: 'El aviso no dice si es apto crédito' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'julieta',
+    cliente: 'Julieta Romano',
+    contacto: 'Julieta',
+    resumen: 'Monoambiente para renta · Núñez · USD 90–110 k',
+    criterios: [
+      { texto: 'Monoambiente o 2 amb chico', tipo: 'obligatorio' },
+      { texto: 'Núñez', tipo: 'obligatorio' },
+      { texto: 'USD 90.000 a 110.000', tipo: 'obligatorio' },
+      { texto: 'Cerca de la UBA o del tren', tipo: 'deseable' },
+      { texto: 'Expensas bajas', tipo: 'deseable' },
+    ],
+    alertas: ['Zonaprop', 'Mercado Libre'],
+    desde: 'hace 20 días',
+    descartadosPorCriterio: 4,
+    avisos: [
+      {
+        id: 'crisologo',
+        direccion: 'Crisólogo Larralde 2290',
+        barrio: 'Núñez',
+        detalle: 'Monoambiente · 34 m² · expensas $ 68.000',
+        usd: 98000,
+        afinidad: 81,
+        fuentes: ['Mercado Libre', 'Zonaprop'],
+        publicadoPor: 'publicada por 2 inmobiliarias',
+        llego: 'hoy 07:48',
+        motivos: [
+          { ok: true, texto: 'A 5 cuadras del tren Mitre' },
+          { ok: true, texto: 'Expensas bajas para la zona' },
+          { ok: null, texto: 'A reciclar: cocina original' },
+        ],
+      },
+    ],
+  },
+]
+
+export const resumenBusquedas = { revisados: 23, duplicados: 7, descartados: 12 }
+
+/** estilo aprendido de 28 mensajes que la asesora mandó a sus clientes */
+export const estiloAsesora = ['Saluda con "Hola" y el nombre', 'Tutea', 'Frases cortas, sin listas', 'Sin emojis', 'Cierra con una pregunta concreta', 'Firma "Martina"']
+
+export const recordatorios = [
+  { cuando: 'Hoy 11:00', texto: 'Mandarle a los Ocampo las opciones nuevas', origen: 'Pedido por WhatsApp' },
+  { cuando: 'Hoy 16:00', texto: 'Tasación Ugarte 1856 con Tomás Iriarte', origen: 'Google Calendar' },
+  { cuando: 'Jue 10:00', texto: 'Llamar a Tomás para confirmar el precio de publicación', origen: 'Pedido por WhatsApp' },
+  { cuando: 'Vie', texto: 'Pedirle al colega las expensas de Juramento 2655', origen: 'Pedido por WhatsApp' },
+]

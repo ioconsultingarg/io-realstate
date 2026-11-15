@@ -55,6 +55,16 @@ def main():
             ir('/agentes', 'agentes')
             ir('/cerebro', 'cerebro')
 
+            page.goto(BASE + '#/busquedas')
+            page.wait_for_timeout(700)
+            page.get_by_role('button', name='Me sirve').first.click()
+            page.wait_for_timeout(400)
+            page.screenshot(path=str(DESTINO / 'busquedas.png'))
+            page.locator('#borrador').scroll_into_view_if_needed()
+            page.wait_for_timeout(300)
+            page.screenshot(path=str(DESTINO / 'busquedas-borrador.png'))
+            print('  capturadas busquedas y busquedas-borrador')
+
             page.goto(BASE + '#/asistente')
             page.wait_for_timeout(600)
             page.get_by_text('Armame el ACM de Ugarte').click()

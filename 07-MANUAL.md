@@ -165,6 +165,29 @@ reunión difícil.
 
 ---
 
+## 8 bis. Flujo 6: búsquedas que avisan (asesor individual)
+
+Pensado para el asesor que tiene clientes compradores y hoy revisa portales a mano (plan completo en `09`).
+
+**Qué hace el asesor:** le dice al asistente lo que busca cada cliente ("Familia Ocampo: 4 ambientes con patio o
+terraza, Villa Urquiza o Coghlan, hasta USD 300 mil, cerca del colegio"). El agente separa lo **obligatorio** de lo
+**deseable** y le arma los filtros para crear una alerta en cada portal. El asesor crea las alertas con su usuario.
+
+**Qué pasa por detrás:** los portales mandan los avisos nuevos a la casilla de búsquedas. El agente los junta con lo
+que llega de la red de colegas, **saca duplicados** (la misma propiedad en varios portales o con varias inmobiliarias)
+y compara cada aviso con el cliente, incluido lo que los portales no filtran. A la mañana le avisa por WhatsApp
+solo lo que coincide, ordenado por afinidad y con el porqué.
+
+**Qué hace el asesor después:** marca **Me sirve** o **No**. Lo que descarta le enseña al agente ("no le muestres
+PH con escalera"). Con lo elegido, el agente arma el **borrador del mensaje al cliente en la voz del asesor**:
+aprendió cómo escribe de sus mensajes anteriores, sin emojis forzados, sin listas, sin frases de folleto. El asesor
+lo revisa y lo manda desde su propio WhatsApp. Al ser un mensaje suyo, no hace falta avisar que intervino una IA.
+
+**Lo que no hace:** no recorre portales con robots (va contra sus términos de uso); usa las alertas que los portales
+ofrecen a cualquier usuario. Por eso los avisos llegan con la demora de cada alerta, no en tiempo real.
+
+---
+
 ## 9. Quién hace qué
 
 | Tarea | Agente | Persona |
@@ -175,6 +198,9 @@ reunión difícil.
 | Negociar precio, aceptar ofertas, tomar reservas o señas | ✘ | ✔ Asesor / corredor |
 | Borrador de tasación | ✔ | ✔ Revisa y **firma** el corredor |
 | Fichas, textos para portales, guiones | ✔ | Aprueba antes de publicar |
+| Rastrear avisos nuevos para cada cliente comprador | ✔ (con las alertas que crea el asesor) | Filtra con Me sirve / No |
+| Mensaje al cliente con las opciones | Borrador en la voz del asesor | ✔ Lo revisa y lo manda el asesor |
+| Recordatorios y tareas | ✔ (pedidos por WhatsApp) | — |
 | Análisis de competencia | ✔ (con material que comparte el asesor) | Elige a quién mirar |
 | Capacitación y práctica | ✔ | El asesor practica |
 | Contratos | Borrador desde plantillas (fase 3) | ✔ Revisa y firma el corredor |
@@ -191,6 +217,7 @@ para mostrar el producto. Se abre con `npm run dev` dentro de `demo/` (o en GitH
 |---|---|---|
 | **Hoy** | Lo que hicieron los agentes anoche, KPI de la semana, consultas fuera de horario, embudo, visitas del día | El chat del teléfono se reproduce solo (botón **Pausar**). Pasar el mouse por los gráficos o tocar **Ver tabla** |
 | **Clientes** | Bandeja con temperatura de cada cliente, chat y ficha calificada por el agente | Filtrar por **Calientes**; abrir a Lucía, Tomás y Hernán (derivado); **Tomar la conversación** |
+| **Búsquedas** | Las búsquedas activas de clientes compradores, lo que encontró el agente y el borrador del mensaje | Marcar **Me sirve** en dos propiedades y ver cómo se arma el mensaje; descartar una con **No** y leer qué aprendió |
 | **Asistente** | El equipo interno: tasación, competencia y práctica | Tocar **#tasación**, esperar los pasos, abrir **Ver informe completo**, **Aprobar y firmar**. Después las otras dos tarjetas |
 | **Agentes** | El catálogo de 11 agentes | Prender y apagar agentes |
 | **Cerebro** | Los 10 temas y la cartera | Ver estados (aprobado, en revisión, pendiente) |

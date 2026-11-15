@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 
-export type Ruta = 'hoy' | 'conversaciones' | 'asistente' | 'agentes' | 'cerebro'
+export type Ruta = 'hoy' | 'conversaciones' | 'busquedas' | 'asistente' | 'agentes' | 'cerebro'
 
 const rutas: Record<string, Ruta> = {
   '': 'hoy',
   '/': 'hoy',
   '/conversaciones': 'conversaciones',
+  '/busquedas': 'busquedas',
   '/asistente': 'asistente',
   '/agentes': 'agentes',
   '/cerebro': 'cerebro',
