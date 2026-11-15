@@ -59,7 +59,7 @@ export const visitasHoy = [
 export type Temperatura = 'caliente' | 'tibio' | 'frio' | 'derivado'
 
 export interface Mensaje {
-  de: 'cliente' | 'agente' | 'sistema'
+  de: 'cliente' | 'agente' | 'sistema' | 'asesor'
   texto: string
   hora: string
   adjunto?: { tipo: 'ficha'; titulo: string; detalle: string }

@@ -33,7 +33,7 @@ FIGURAS = {
         ('busquedas-borrador', 'El borrador del mensaje al cliente, escrito como escribe la asesora. Lo manda ella.'),
     ],
     '## 9.': [('agentes', 'Pantalla Agentes: el catálogo, con los que están activos y los que vienen.')],
-    '## 10.': [('cerebro', 'Pantalla Cerebro: los 10 temas y la cartera sincronizada.'), ('movil-hoy', 'La misma demo en el celular.')],
+    '## 10.': [('busquedas-aviso', 'Agregar un aviso: se pega el texto y el agente completa los datos y muestra la afinidad antes de guardar.'), ('tasacion-editor', 'Editor de tasación: superficie, ajuste y comparables, con el valor recalculado en vivo.'), ('cerebro', 'Pantalla Cerebro: los 10 temas y la cartera sincronizada.'), ('movil-hoy', 'La misma demo en el celular.')],
 }
 
 MARCA = """<svg width="44" height="44" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#1a1714" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 L12 47" stroke-width="7"/><path d="M29 30 L42.5 18.5 L56 30 L56 41 Q56 47 50 47 L35 47 Q29 47 29 41 Z" stroke-width="6.5"/></g><rect x="39.5" y="32" width="6" height="6" rx="1.6" fill="#a3640c"/></svg>"""

@@ -11,14 +11,14 @@ captación, tasación, marketing, capacitación y más), que conoce la forma de 
 atiende y trabaja por **WhatsApp** y entrega trabajo presentable con la firma del corredor y **dentro del
 marco legal argentino**.
 
-Etapa: **demo vendible** (14/11/2026): una app navegable con datos ficticios, sin backend, en [`demo/`](demo/).
+Etapa: **demo funcional** (15/11/2026) en [`demo/`](demo/), con propuesta comercial y manual en PDF.
 
 ## Demo
 
-Recorrido de una inmobiliaria ficticia: la consulta de las 23:14 atendida y agendada, la bandeja de
-clientes con la calificación hecha por el agente, las búsquedas de clientes compradores con avisos de los portales
-y el borrador del mensaje en la voz del asesor, el asistente interno (tasación con informe para firmar,
-análisis de competencia y práctica de objeciones), el catálogo de agentes y el cerebro.
+**https://ioconsultingarg.github.io/io-realstate/** — funciona en el navegador: crear búsquedas, pegar avisos y ver la
+afinidad, elegir y obtener el mensaje en la voz del asesor, armar una tasación con tus comparables e imprimir el
+informe, importar la cartera por CSV, recordatorios en lenguaje natural y responder clientes. Lo cargado queda en el
+navegador y se puede volver al ejemplo desde Cuenta. La IA de los agentes sigue simulada con respuestas armadas.
 
 ```bash
 cd demo
@@ -26,8 +26,19 @@ npm install
 npm run dev
 ```
 
-Se publica en GitHub Pages con el flujo `.github/workflows/pages.yml` (hay que elegir *GitHub Actions*
-como fuente en la configuración de Pages del repo).
+Se publica sola en GitHub Pages con cada push que toque `demo/` (`.github/workflows/pages.yml`).
+
+## Para vender
+
+- [`IO-RealState-Propuesta.pdf`](IO-RealState-Propuesta.pdf) — propuesta comercial: problema, cómo funciona, qué hace,
+  qué no hace, planes con precio y QR a la demo.
+- [`Manual-IO-RealState.pdf`](Manual-IO-RealState.pdf) — manual completo con capturas.
+
+Los dos se regeneran desde la demo compilada:
+
+```bash
+python manual/capturas.py && python manual/generar_manual.py && cd manual && python generar_venta.py
+```
 
 ## Orden de lectura
 

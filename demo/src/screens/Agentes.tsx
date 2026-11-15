@@ -1,9 +1,11 @@
-import { useState } from 'react'
 import { Chip, Encabezado, iconoAgente } from '../components/ui'
 import { agentes } from '../data/demo'
+import { crearAlmacen } from '../lib/almacen'
+
+export const almacenAgentes = crearAlmacen<Record<string, boolean>>('agentes', () => Object.fromEntries(agentes.map((a) => [a.id, a.estado === 'activo'])))
 
 export function Agentes() {
-  const [activos, setActivos] = useState<Record<string, boolean>>(() => Object.fromEntries(agentes.map((a) => [a.id, a.estado === 'activo'])))
+  const activos = almacenAgentes.usar()
   const encendidos = Object.values(activos).filter(Boolean).length
 
   return (
@@ -45,7 +47,7 @@ export function Agentes() {
                     role="switch"
                     aria-checked={on}
                     aria-labelledby={idTitulo}
-                    onClick={() => setActivos((s) => ({ ...s, [a.id]: !s[a.id] }))}
+                    onClick={() => almacenAgentes.cambiar((s) => ({ ...s, [a.id]: !s[a.id] }))}
                     className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors duration-200 ${on ? 'bg-ok' : 'bg-line-2'}`}
                   >
                     <span className="sr-only">{on ? 'Encendido' : 'Apagado'}</span>

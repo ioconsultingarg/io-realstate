@@ -1,8 +1,12 @@
-import { useState } from 'react'
-import { ArrowLeft, CalendarCheck2, Hand, PauseCircle, Sparkles } from 'lucide-react'
+import { useState, type FormEvent } from 'react'
+import { ArrowLeft, ArrowUp, CalendarCheck2, Hand, PauseCircle, Sparkles } from 'lucide-react'
 import { ChatWhatsApp } from '../components/ChatWhatsApp'
 import { Boton, ChipTemperatura, Encabezado, SelloAgente } from '../components/ui'
-import { conversaciones, nombreAgente, type Conversacion } from '../data/demo'
+import { conversaciones, nombreAgente, type Conversacion, type Mensaje } from '../data/demo'
+import { crearAlmacen } from '../lib/almacen'
+
+const almacenTomadas = crearAlmacen<Record<string, boolean>>('tomadas', () => ({}))
+const almacenRespuestas = crearAlmacen<Record<string, Mensaje[]>>('respuestas', () => ({}))
 
 const filtros = [
   { id: 'todas', etiqueta: 'Todas', pasa: () => true },
@@ -12,11 +16,23 @@ const filtros = [
 
 export function Conversaciones({ param }: { param: string | null }) {
   const [filtro, setFiltro] = useState<(typeof filtros)[number]['id']>('todas')
-  const [tomadas, setTomadas] = useState<Record<string, boolean>>({})
+  const tomadas = almacenTomadas.usar()
+  const respuestas = almacenRespuestas.usar()
+  const [texto, setTexto] = useState('')
   const seleccion = conversaciones.find((c) => c.id === param) ?? null
   const actual = seleccion ?? conversaciones[0]
   const lista = conversaciones.filter(filtros.find((f) => f.id === filtro)!.pasa)
   const tomada = tomadas[actual.id]
+  const mensajes = [...actual.mensajes, ...(respuestas[actual.id] ?? [])]
+
+  function responder(e: FormEvent) {
+    e.preventDefault()
+    if (!texto.trim()) return
+    const ahora = new Date()
+    const hora = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`
+    almacenRespuestas.cambiar((r) => ({ ...r, [actual.id]: [...(r[actual.id] ?? []), { de: 'asesor', texto: texto.trim(), hora }] }))
+    setTexto('')
+  }
 
   return (
     <>
@@ -94,7 +110,7 @@ export function Conversaciones({ param }: { param: string | null }) {
             Todas las conversaciones
           </a>
           <div className="tarjeta overflow-hidden p-2">
-            <ChatWhatsApp key={actual.id} mensajes={actual.mensajes} contacto={actual.nombre} marco={false} alto="h-[560px]" />
+            <ChatWhatsApp key={actual.id} mensajes={mensajes} contacto={actual.nombre} marco={false} alto="h-[560px]" />
           </div>
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line bg-surface px-4 py-3">
             {tomada ? (
@@ -108,10 +124,29 @@ export function Conversaciones({ param }: { param: string | null }) {
                 Atiende {nombreAgente(actual.agente)}
               </p>
             )}
-            <Boton variante={tomada ? 'secundario' : 'primario'} icono={Hand} onClick={() => setTomadas((t) => ({ ...t, [actual.id]: !t[actual.id] }))}>
+            <Boton variante={tomada ? 'secundario' : 'primario'} icono={Hand} onClick={() => almacenTomadas.cambiar((t) => ({ ...t, [actual.id]: !t[actual.id] }))}>
               {tomada ? 'Devolver al agente' : 'Tomar la conversación'}
             </Boton>
           </div>
+          {tomada && (
+            <form onSubmit={responder} className="mt-3 flex gap-2">
+              <label htmlFor="respuesta" className="sr-only">
+                Tu respuesta a {actual.nombre}
+              </label>
+              <input
+                id="respuesta"
+                name="respuesta"
+                autoComplete="off"
+                value={texto}
+                onChange={(e) => setTexto(e.target.value)}
+                placeholder={`Escribile a ${actual.nombre.split(' ')[0]}…`}
+                className="min-h-12 min-w-0 flex-1 rounded-full border border-line-2 bg-surface px-4 text-[16px] outline-none placeholder:text-ink-3 focus:border-marca"
+              />
+              <button type="submit" aria-label="Enviar" disabled={!texto.trim()} className="press inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-boton text-sobre-boton hover:bg-boton-hover disabled:opacity-40">
+                <ArrowUp size={18} aria-hidden="true" />
+              </button>
+            </form>
+          )}
         </section>
 
         {/* Ficha */}

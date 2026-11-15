@@ -208,33 +208,34 @@ ofrecen a cualquier usuario. Por eso los avisos llegan con la demora de cada ale
 
 ---
 
-## 10. Cómo recorrer la demo
+## 10. Cómo usar la demo
 
-La demo es una aplicación web con **datos ficticios** y **sin servidor**: todo lo que pasa está programado
-para mostrar el producto. Se abre con `npm run dev` dentro de `demo/` (o en GitHub Pages cuando se active).
+La demo está publicada en **https://ioconsultingarg.github.io/io-realstate/** y **funciona en el navegador**: lo que
+cargues (búsquedas, avisos, tasaciones, cartera, recordatorios, respuestas) queda guardado en ese navegador y se puede
+volver al ejemplo desde **Cuenta → Volver a los datos de ejemplo**. Los datos de ejemplo son ficticios.
 
-| Pantalla | Qué mostrar | Qué tocar |
-|---|---|---|
-| **Hoy** | Lo que hicieron los agentes anoche, KPI de la semana, consultas fuera de horario, embudo, visitas del día | El chat del teléfono se reproduce solo (botón **Pausar**). Pasar el mouse por los gráficos o tocar **Ver tabla** |
-| **Clientes** | Bandeja con temperatura de cada cliente, chat y ficha calificada por el agente | Filtrar por **Calientes**; abrir a Lucía, Tomás y Hernán (derivado); **Tomar la conversación** |
-| **Búsquedas** | Las búsquedas activas de clientes compradores, lo que encontró el agente y el borrador del mensaje | Marcar **Me sirve** en dos propiedades y ver cómo se arma el mensaje; descartar una con **No** y leer qué aprendió |
-| **Asistente** | El equipo interno: tasación, competencia y práctica | Tocar **#tasación**, esperar los pasos, abrir **Ver informe completo**, **Aprobar y firmar**. Después las otras dos tarjetas |
-| **Agentes** | El catálogo de 11 agentes | Prender y apagar agentes |
-| **Cerebro** | Los 10 temas y la cartera | Ver estados (aprobado, en revisión, pendiente) |
-| **Cuenta** | Datos de la corredora y apariencia | Cambiar a tema claro |
-
-### Qué simula la demo y qué no
-
-| En la demo | En el producto real |
+| Pantalla | Qué probar |
 |---|---|
-| Las conversaciones están escritas de antemano | Las escribe Claude en el momento, con el cerebro y la cartera de la inmobiliaria |
-| El asistente responde solo a tres pedidos de ejemplo | Responde cualquier pedido de su departamento |
-| Los cálculos del ACM son reales pero con 6 comparables fijos | Usa los comparables que encuentre o cargue el asesor |
-| "Aprobar y firmar" cambia el estado en pantalla | Queda registrado quién aprobó, cuándo y qué versión |
-| Los agentes se prenden y apagan sin efecto | Apagar un agente lo saca de los canales |
-| No hay inicio de sesión | Cada persona entra con su usuario y ve lo que le permite su rol |
+| **Hoy** | El chat de las 23:14 se reproduce solo (botón **Pausar**). Pasar el mouse por los gráficos o tocar **Ver tabla** |
+| **Clientes** | Filtrar por **Calientes**; abrir a Lucía, Tomás o Hernán; **Tomar la conversación** y escribirle al cliente |
+| **Búsquedas** | **Nueva búsqueda** con lo que pide un cliente real; **Agregar aviso** → pegar el texto de un aviso o del mail de una alerta → **Leer aviso**: completa los datos y muestra la afinidad antes de guardar. Marcar **Me sirve** y ver el mensaje en tu voz; **No** para descartar. Escribir un recordatorio como por WhatsApp ("recordame llamar a Tomás el jueves 10") |
+| **Asistente** | **#tasación** → **Editar inmueble y comparables**: cambiar la superficie, agregar ventas que conozcas o traer avisos de tus búsquedas; el valor se recalcula en vivo. **Ver informe** → **Aprobar y firmar** → **Imprimir o PDF**. Las otras dos tarjetas muestran competencia y práctica de objeciones |
+| **Agentes** | Prender y apagar agentes: el contador de la barra superior cambia |
+| **Cerebro** | **Importar CSV** de tu cartera (con **Plantilla** para ver el formato; acepta `;` como Excel en castellano) y cambiar el estado de cada propiedad |
+| **Cuenta** | Tema claro u oscuro, manual en PDF y volver a los datos de ejemplo |
 
----
+### Qué funciona de verdad y qué sigue simulado
+
+| Funciona en la demo | Sigue simulado | En el producto real |
+|---|---|---|
+| Búsquedas, criterios, afinidad con el porqué, descartes, borrador del mensaje | La llegada automática de avisos (se pegan a mano) | Los avisos llegan solos desde las alertas de los portales; Claude lee el aviso completo |
+| Lector de avisos pegados (dirección, barrio, ambientes, m², precio) | — | Claude lee el mail de la alerta entero, con fotos y descripción |
+| Tasación: datos, comparables, cálculo, informe, firma e impresión | — | Comparables desde cierres propios, cartera y alertas; firma registrada con versión |
+| Cartera por CSV con informe de lo que no se pudo leer | La sincronización diaria | Sincronización diaria con el CRM o el CSV |
+| Recordatorios en lenguaje natural | El aviso a la hora indicada | Llega un WhatsApp a la hora del recordatorio |
+| Responder a un cliente tomando la conversación | El envío real por WhatsApp | Sale por la API oficial de WhatsApp |
+| — | Las conversaciones de los agentes y las respuestas del asistente a competencia y práctica | Las escribe Claude en el momento, con el cerebro de la inmobiliaria |
+| — | Inicio de sesión y roles | Cada persona entra con su usuario |
 
 ## 11. Preguntas frecuentes
 

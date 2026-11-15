@@ -1,17 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { ArrowUp, BookOpen, Check, FileText, Hash, LoaderCircle, Lock, ShieldCheck, Sparkles } from 'lucide-react'
-import { acmUgarte, InformeACM } from '../components/InformeACM'
+import { ArrowUp, BookOpen, Check, FileText, Hash, LoaderCircle, Lock, Pencil, ShieldCheck, Sparkles } from 'lucide-react'
+import { EditorTasacion } from '../components/EditorTasacion'
+import { InformeACM } from '../components/InformeACM'
 import { ComparablesUSDm2 } from '../components/Graficos'
 import { Sheet } from '../components/Sheet'
 import { Boton, Chip, Encabezado, iconoAgente, SelloAgente } from '../components/ui'
-import { cerebro, comparablesUgarte, competencia, inmobiliaria, nombreAgente, pedidosEjemplo, roleplay } from '../data/demo'
-import { usd } from '../lib/acm'
+import { cerebro, competencia, inmobiliaria, nombreAgente, pedidosEjemplo, roleplay } from '../data/demo'
+import { calcularACM, usd } from '../lib/acm'
+import { almacenTasacion } from '../lib/tasacion'
+import { almacenCartera } from '../lib/cartera'
 
 type Pedido = (typeof pedidosEjemplo)[number]
 
 const pasos: Record<Pedido['id'], string[]> = {
-  tasacion: ['Leyendo la ficha de Ugarte 1856 en el cerebro', 'Buscando PH comparables vendidos y publicados', 'Calculando el rango y armando el informe con tu marca'],
+  tasacion: ['Leyendo la ficha del inmueble en el cerebro', 'Buscando PH comparables vendidos y publicados', 'Calculando el rango y armando el informe con tu marca'],
   competencia: ['Leyendo tus zonas y tu propuesta de valor', 'Relevando anuncios activos de la competencia', 'Agrupando ángulos y buscando espacios libres'],
   roleplay: ['Leyendo tus objeciones frecuentes', 'Armando el personaje del propietario', 'Preparando la devolución con tus criterios'],
 }
@@ -25,8 +28,8 @@ export function Asistente() {
   const [turnos, setTurnos] = useState<Turno[]>([])
   const [texto, setTexto] = useState('')
   const [aviso, setAviso] = useState<string | null>(null)
-  const [informe, setInforme] = useState(false)
-  const [aprobado, setAprobado] = useState(false)
+  const [panel, setPanel] = useState<'informe' | 'editor' | null>(null)
+  const cartera = almacenCartera.usar()
   const reducir = useReducedMotion()
   const fin = useRef<HTMLDivElement>(null)
   const trabajando = turnos.some((t) => !t.listo)
@@ -104,7 +107,7 @@ export function Asistente() {
                   </div>
                   <div className="tarjeta p-5 sm:p-6">
                     <SelloAgente agente={t.pedido.agente} nombre={`Agente de ${nombreAgente(t.pedido.agente).toLowerCase()}`} />
-                    {t.listo ? <Resultado id={t.pedido.id} onInforme={() => setInforme(true)} aprobado={aprobado} /> : <Trabajando pasos={pasos[t.pedido.id]} />}
+                    {t.listo ? <Resultado id={t.pedido.id} onPanel={setPanel} /> : <Trabajando pasos={pasos[t.pedido.id]} />}
                   </div>
                 </motion.div>
               ))}
@@ -170,7 +173,7 @@ export function Asistente() {
             <ul className="mt-3 space-y-3 text-[14px]">
               {[
                 ['Cerebro de la inmobiliaria', `${cerebro.filter((c) => c.estado === 'aprobado').length} de ${cerebro.length} temas aprobados`],
-                ['Cartera', '64 propiedades · hoy 06:00'],
+                ['Cartera', `${cartera.length} propiedades · ${cartera.filter((c) => c.estado === 'disponible').length} disponibles`],
                 ['Cierres cargados', '212 operaciones desde 2021'],
               ].map(([t, d]) => (
                 <li key={t} className="flex gap-2.5">
@@ -203,8 +206,8 @@ export function Asistente() {
         </aside>
       </div>
 
-      <Sheet abierto={informe} onCerrar={() => setInforme(false)} titulo="Informe de tasación" ancho="max-w-[860px]">
-        <InformeACM aprobado={aprobado} onAprobar={() => setAprobado(true)} />
+      <Sheet abierto={panel !== null} onCerrar={() => setPanel(null)} titulo={panel === 'editor' ? 'Datos de la tasación' : 'Informe de tasación'} ancho="max-w-[860px]">
+        {panel === 'editor' ? <EditorTasacion onVerInforme={() => setPanel('informe')} /> : <InformeACM onEditar={() => setPanel('editor')} />}
       </Sheet>
     </>
   )
@@ -235,27 +238,47 @@ function Trabajando({ pasos }: { pasos: string[] }) {
   )
 }
 
-function Resultado({ id, onInforme, aprobado }: { id: Pedido['id']; onInforme: () => void; aprobado: boolean }) {
-  if (id === 'tasacion') {
-    const a = acmUgarte
-    return (
-      <div className="mt-4">
-        <p className="text-[15px] leading-relaxed text-ink">
-          Listo el borrador para Tomás. Con 6 PH comparables, el valor sugerido para publicar es <strong className="num font-medium">{usd(a.sugerido)}</strong>, dentro de un rango de{' '}
-          <span className="num">{usd(a.rango[0])}</span> a <span className="num">{a.rango[1].toLocaleString('es-AR')}</span>. En la zona se vendieron en <span className="num">{a.diasMediana}</span> días de mediana.
-        </p>
-        <div className="mt-5 rounded-xl border border-line p-4">
-          <ComparablesUSDm2 comparables={comparablesUgarte} rango={[a.rango[0] / 120, a.rango[1] / 120]} sugerido={a.sugerido / 120} />
-        </div>
-        <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Boton icono={FileText} onClick={onInforme}>
-            Ver informe completo
-          </Boton>
-          <Chip tono={aprobado ? 'ok' : 'warn'}>{aprobado ? 'Firmado · listo para enviar' : 'Falta tu firma antes de enviarlo'}</Chip>
-        </div>
+function ResultadoTasacion({ onPanel }: { onPanel: (p: 'informe' | 'editor') => void }) {
+  const t = almacenTasacion.usar()
+  const a = calcularACM(t.comparables, t.m2, t.ajuste)
+  const validos = t.comparables.filter((c) => c.m2 > 0 && c.usd > 0)
+  return (
+    <div className="mt-4">
+      {a.suficiente ? (
+        <>
+          <p className="text-[15px] leading-relaxed text-ink">
+            Listo el borrador{t.cliente ? ` para ${t.cliente.split(' ')[0]}` : ''}. Con {a.cantidad} comparables, el valor sugerido para publicar {t.direccion ? `${t.direccion} ` : ''}es{' '}
+            <strong className="num font-medium">{usd(a.sugerido)}</strong>, dentro de un rango de <span className="num">{usd(a.rango[0])}</span> a <span className="num">{a.rango[1].toLocaleString('es-AR')}</span>.
+            {a.diasMediana ? (
+              <>
+                {' '}
+                En la zona se vendieron en <span className="num">{a.diasMediana}</span> días de mediana.
+              </>
+            ) : null}
+          </p>
+          <div className="mt-5 rounded-xl border border-line p-4">
+            <ComparablesUSDm2 comparables={validos} rango={[a.rango[0] / t.m2, a.rango[1] / t.m2]} sugerido={a.sugerido / t.m2} />
+          </div>
+        </>
+      ) : (
+        <p className="rounded-xl bg-warn-soft p-4 text-[15px] text-warn">Para darte un valor serio necesito al menos 3 comparables con m² y precio, y la superficie del inmueble. Cargalos y lo recalculo.</p>
+      )}
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <Boton icono={FileText} onClick={() => onPanel('informe')} disabled={!a.suficiente}>
+          Ver informe completo
+        </Boton>
+        <Boton variante="secundario" icono={Pencil} onClick={() => onPanel('editor')}>
+          Editar inmueble y comparables
+        </Boton>
+        {a.suficiente && <Chip tono={t.aprobado ? 'ok' : 'warn'}>{t.aprobado ? 'Firmado · listo para enviar' : 'Falta tu firma antes de enviarlo'}</Chip>}
       </div>
-    )
-  }
+    </div>
+  )
+}
+
+function Resultado({ id, onPanel }: { id: Pedido['id']; onPanel: (p: 'informe' | 'editor') => void }) {
+  if (id === 'tasacion') return <ResultadoTasacion onPanel={onPanel} />
+
 
   if (id === 'competencia') {
     const max = Math.max(...competencia.angulos.map((a) => a.competidores))

@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { CheckCheck, ChevronLeft, FileText, Lock, Pause, Play, RotateCcw } from 'lucide-react'
 import type { Mensaje } from '../data/demo'
 
-const ritmo = { cliente: 900, agente: 1300, sistema: 500 }
+const ritmo = { cliente: 900, agente: 1300, sistema: 500, asesor: 900 }
 
 /**
  * Conversación con el aspecto de WhatsApp (el teléfono es un dispositivo, no cambia con el tema).
@@ -31,7 +31,7 @@ export function ChatWhatsApp({ mensajes, contacto, reproducir = false, alto = 'h
       return
     }
     const siguiente = mensajes[visibles]
-    const esAgente = siguiente.de === 'agente'
+    const esAgente = siguiente.de === 'agente' || siguiente.de === 'asesor'
     setEscribiendo(esAgente)
     const t = setTimeout(() => setVisibles((v) => v + 1), ritmo[siguiente.de] + (visibles === 0 ? 400 : 0))
     return () => clearTimeout(t)
@@ -114,7 +114,7 @@ function Burbuja({ m }: { m: Mensaje }) {
       </motion.p>
     )
   }
-  const saliente = m.de === 'agente'
+  const saliente = m.de === 'agente' || m.de === 'asesor'
   return (
     <motion.div
       initial={{ opacity: 0, y: 8, scale: 0.98 }}

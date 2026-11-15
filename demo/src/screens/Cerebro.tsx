@@ -1,6 +1,8 @@
-import { CircleCheck, CircleDashed, CircleDot, RefreshCw } from 'lucide-react'
-import { Chip, Encabezado } from '../components/ui'
-import { cartera, cerebro, inmobiliaria } from '../data/demo'
+import { useState } from 'react'
+import { CircleCheck, CircleDashed, CircleDot, Download, RefreshCw, Upload } from 'lucide-react'
+import { Encabezado } from '../components/ui'
+import { cerebro, inmobiliaria } from '../data/demo'
+import { almacenCartera, estadosCartera, importarCSV, plantillaCSV, type EstadoCartera, type ResultadoImportacion } from '../lib/cartera'
 
 const estados = {
   aprobado: { etiqueta: 'Aprobado', Icono: CircleCheck, clase: 'text-ok' },
@@ -8,9 +10,16 @@ const estados = {
   pendiente: { etiqueta: 'Pendiente', Icono: CircleDashed, clase: 'text-ink-3' },
 } as const
 
-const tonoCartera = { disponible: 'ok', reservada: 'warn', vendida: 'neutro', 'en captación': 'marca' } as const
+const claseEstado: Record<EstadoCartera, string> = {
+  disponible: 'bg-ok-soft text-ok',
+  reservada: 'bg-warn-soft text-warn',
+  vendida: 'bg-sunken text-ink-3',
+  'en captación': 'bg-marca-soft text-marca',
+}
 
 export function Cerebro() {
+  const cartera = almacenCartera.usar()
+  const [informe, setInforme] = useState<ResultadoImportacion | null>(null)
   const aprobados = cerebro.filter((c) => c.estado === 'aprobado').length
   const total = cerebro.length
   const r = 34
@@ -71,15 +80,55 @@ export function Cerebro() {
         </section>
 
         <section aria-labelledby="cartera">
-          <div className="mb-4 flex items-end justify-between gap-3">
-            <h2 id="cartera" className="titular text-[28px]">
-              Cartera
-            </h2>
-            <span className="inline-flex items-center gap-1.5 text-[13px] text-ink-3">
-              <RefreshCw size={13} aria-hidden="true" />
-              Sincronizada hoy 06:00
-            </span>
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 id="cartera" className="titular text-[28px]">
+                Cartera
+              </h2>
+              <span className="inline-flex items-center gap-1.5 text-[13px] text-ink-3">
+                <RefreshCw size={13} aria-hidden="true" />
+                {cartera.length} propiedades · en el producto se sincroniza todos los días
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <label className="press inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-boton px-4 text-[14px] font-medium text-sobre-boton hover:bg-boton-hover has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-marca">
+                <Upload size={16} aria-hidden="true" />
+                Importar CSV
+                <input
+                  type="file"
+                  accept=".csv,text/csv"
+                  className="sr-only"
+                  onChange={async (e) => {
+                    const archivo = e.target.files?.[0]
+                    if (archivo) setInforme(importarCSV(await archivo.text()))
+                    e.target.value = ''
+                  }}
+                />
+              </label>
+              <a
+                href={`data:text/csv;charset=utf-8,${encodeURIComponent(plantillaCSV)}`}
+                download="plantilla-cartera.csv"
+                className="press inline-flex min-h-11 items-center gap-2 rounded-full border border-line-2 bg-surface px-4 text-[14px] font-medium text-ink hover:bg-sunken"
+              >
+                <Download size={16} aria-hidden="true" />
+                Plantilla
+              </a>
+            </div>
           </div>
+          {informe && (
+            <div role="status" className={`mb-4 rounded-2xl p-4 text-[14px] ${informe.agregadas + informe.actualizadas ? 'bg-ok-soft text-ink' : 'bg-bad-soft text-bad'}`}>
+              <p className="font-medium">
+                {informe.agregadas + informe.actualizadas
+                  ? `Importé ${informe.agregadas} propiedades nuevas y actualicé ${informe.actualizadas}.`
+                  : 'No pude importar el archivo.'}
+              </p>
+              {informe.errores.map((e) => (
+                <p key={e} className="mt-1 text-ink-2">
+                  {e}
+                </p>
+              ))}
+            </div>
+          )}
           <div className="tarjeta scroll-fino overflow-x-auto">
             <table className="w-full min-w-[540px] text-left text-[14px]">
               <thead className="text-[12px] text-ink-3">
@@ -92,7 +141,7 @@ export function Cerebro() {
               </thead>
               <tbody className="divide-y divide-line">
                 {cartera.map((p) => (
-                  <tr key={p.direccion} className="hover-fila">
+                  <tr key={p.id} className="hover-fila">
                     <td className="px-4 py-3">
                       <span className="block font-medium">{p.direccion}</span>
                       <span className="text-[12px] text-ink-3">
@@ -102,7 +151,18 @@ export function Cerebro() {
                     <td className="px-4 py-3 text-ink-2">{p.operacion}</td>
                     <td className="num px-4 py-3 text-right whitespace-nowrap">{p.precio}</td>
                     <td className="px-4 py-3">
-                      <Chip tono={tonoCartera[p.estado]}>{p.estado}</Chip>
+                      <select
+                        aria-label={`Estado de ${p.direccion}`}
+                        value={p.estado}
+                        onChange={(e) => almacenCartera.cambiar((cs) => cs.map((x) => (x.id === p.id ? { ...x, estado: e.target.value as EstadoCartera, actualizada: 'recién' } : x)))}
+                        className={`min-h-9 cursor-pointer rounded-full border-0 px-2.5 text-[12px] font-medium ${claseEstado[p.estado]}`}
+                      >
+                        {estadosCartera.map((e) => (
+                          <option key={e} value={e} className="bg-surface text-ink">
+                            {e}
+                          </option>
+                        ))}
+                      </select>
                     </td>
                   </tr>
                 ))}

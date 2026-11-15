@@ -1,8 +1,10 @@
 import { useState, type ReactNode } from 'react'
-import { BookOpen, Brain, ExternalLink, Info, LayoutDashboard, MessagesSquare, Moon, SearchCheck, Sparkles, Sun, UsersRound, type LucideIcon } from 'lucide-react'
+import { BookOpen, Brain, ExternalLink, FileText, Info, LayoutDashboard, MessagesSquare, Moon, SearchCheck, Sparkles, Sun, UsersRound, type LucideIcon } from 'lucide-react'
 import { conversaciones, inmobiliaria, usuaria } from '../data/demo'
 import type { Ruta } from '../lib/ruta'
 import { useTema } from '../lib/tema'
+import { restablecerDemo } from '../lib/almacen'
+import { almacenAgentes } from '../screens/Agentes'
 import { Marca } from './Marca'
 import { Sheet } from './Sheet'
 
@@ -39,6 +41,8 @@ function Avisos({ item }: { item: ItemNav }) {
 
 export function Shell({ ruta, children }: { ruta: Ruta; children: ReactNode }) {
   const [cuenta, setCuenta] = useState(false)
+  const [confirmar, setConfirmar] = useState(false)
+  const encendidos = Object.values(almacenAgentes.usar()).filter(Boolean).length
   const { tema, setTema } = useTema()
   const iniciales = usuaria.nombre[0] + usuaria.apellido[0]
 
@@ -94,7 +98,8 @@ export function Shell({ ruta, children }: { ruta: Ruta; children: ReactNode }) {
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <span className="hidden items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 text-[13px] text-ink-2 sm:inline-flex">
-              <span aria-hidden="true" className="punto-vivo size-2 rounded-full bg-ok text-ok" />6 agentes trabajando
+              <span aria-hidden="true" className="punto-vivo size-2 rounded-full bg-ok text-ok" />
+              {encendidos} agentes trabajando
             </span>
             <button type="button" onClick={() => setCuenta(true)} className="press inline-flex size-11 items-center justify-center rounded-full bg-sunken text-[13px] font-semibold md:hidden" aria-label="Cuenta y apariencia">
               {iniciales}
@@ -181,6 +186,20 @@ export function Shell({ ruta, children }: { ruta: Ruta; children: ReactNode }) {
             <ExternalLink size={16} aria-hidden="true" className="text-ink-3" />
             <span className="sr-only">(se abre en una pestaña nueva)</span>
           </a>
+          <a
+            href="./io-realstate-propuesta.pdf"
+            target="_blank"
+            rel="noopener"
+            className="press flex min-h-14 items-center gap-3 rounded-2xl border border-line bg-surface px-4 text-[15px] font-medium text-ink hover:bg-sunken"
+          >
+            <FileText size={18} aria-hidden="true" className="text-marca" />
+            <span className="flex-1">
+              Propuesta y planes
+              <span className="block text-[13px] font-normal text-ink-3">PDF · qué hace, qué no hace y cuánto cuesta</span>
+            </span>
+            <ExternalLink size={16} aria-hidden="true" className="text-ink-3" />
+            <span className="sr-only">(se abre en una pestaña nueva)</span>
+          </a>
 
           <div className="flex gap-3 rounded-2xl border border-line p-4 text-[14px] leading-relaxed text-ink-2">
             <Info size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-ink-3" />
@@ -191,6 +210,34 @@ export function Shell({ ruta, children }: { ruta: Ruta; children: ReactNode }) {
               </a>
               .
             </p>
+          </div>
+
+          <div className="rounded-2xl border border-line p-4">
+            <p className="text-[15px] font-medium">Tus datos de prueba</p>
+            <p className="mt-1 text-[14px] leading-relaxed text-ink-2">Las búsquedas, avisos, tasaciones, recordatorios y cambios que hagas quedan guardados solo en este navegador.</p>
+            {confirmar ? (
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <span className="text-[14px] text-bad">Se borra todo lo que cargaste.</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    restablecerDemo()
+                    setConfirmar(false)
+                    setCuenta(false)
+                  }}
+                  className="press inline-flex min-h-11 items-center rounded-full bg-bad px-4 text-[14px] font-medium text-sobre-boton hover:brightness-110"
+                >
+                  Restablecer la demo
+                </button>
+                <button type="button" onClick={() => setConfirmar(false)} className="press inline-flex min-h-11 items-center rounded-full px-4 text-[14px] text-ink-2 hover:bg-sunken">
+                  Cancelar
+                </button>
+              </div>
+            ) : (
+              <button type="button" onClick={() => setConfirmar(true)} className="press mt-3 inline-flex min-h-11 items-center rounded-full border border-line-2 px-4 text-[14px] font-medium text-ink hover:bg-sunken">
+                Volver a los datos de ejemplo
+              </button>
+            )}
           </div>
         </div>
       </Sheet>
