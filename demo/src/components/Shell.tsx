@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { Brain, Info, LayoutDashboard, MessagesSquare, Moon, Sparkles, Sun, UsersRound, type LucideIcon } from 'lucide-react'
+import { BookOpen, Brain, ExternalLink, Info, LayoutDashboard, MessagesSquare, Moon, Sparkles, Sun, UsersRound, type LucideIcon } from 'lucide-react'
 import { conversaciones, inmobiliaria, usuaria } from '../data/demo'
 import type { Ruta } from '../lib/ruta'
 import { useTema } from '../lib/tema'
@@ -165,6 +165,21 @@ export function Shell({ ruta, children }: { ruta: Ruta; children: ReactNode }) {
             </div>
             <p className="mt-2 text-[13px] text-ink-3">El oscuro viene por defecto. Lo que elijas queda guardado en este navegador.</p>
           </fieldset>
+
+          <a
+            href="./manual-io-realstate.pdf"
+            target="_blank"
+            rel="noopener"
+            className="press flex min-h-14 items-center gap-3 rounded-2xl border border-line bg-surface px-4 text-[15px] font-medium text-ink hover:bg-sunken"
+          >
+            <BookOpen size={18} aria-hidden="true" className="text-marca" />
+            <span className="flex-1">
+              Manual de uso
+              <span className="block text-[13px] font-normal text-ink-3">PDF · cómo funciona cada pieza y cada flujo</span>
+            </span>
+            <ExternalLink size={16} aria-hidden="true" className="text-ink-3" />
+            <span className="sr-only">(se abre en una pestaña nueva)</span>
+          </a>
 
           <div className="flex gap-3 rounded-2xl border border-line p-4 text-[14px] leading-relaxed text-ink-2">
             <Info size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-ink-3" />
