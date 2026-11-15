@@ -106,6 +106,9 @@ use al menos 3 entregables internos por semana.
 
 ## 5. Modelo de negocio (hipótesis a validar en entrevistas)
 
+> **Actualizado el 14/11/2026:** desde octubre de 2026 Meta cobra también los mensajes de servicio, así que
+> estos precios no cubren el costo. Los precios revisados están en `08-FACTIBILIDAD-E2E.md` §5.2.
+
 Ninguna referencia publica precio; publicar uno simple es diferencial. Valores en USD, cobrables en pesos.
 
 | Plan | Para quién | Incluye | Hipótesis |

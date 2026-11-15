@@ -1,5 +1,8 @@
 # 05 · Arquitectura y costos
 
+> **Actualizado el 14/11/2026:** los costos de WhatsApp, la decisión sobre grupos y el análisis de
+> competencia se verificaron en `08-FACTIBILIDAD-E2E.md`, que reemplaza las cifras de este documento.
+
 Propuesta para el piloto (paso 1 de `04`). La demo vendible del paso 0 no necesita nada de esto: es
 estática, como los otros demos del portfolio.
 

@@ -136,6 +136,15 @@ Es el riesgo más concreto del producto: maneja nombres, teléfonos, ingresos, g
 
 ---
 
+## 2.10 Verificado el 14/11/2026 (ver `08`)
+
+- **Grupos de WhatsApp:** la API oficial admite 8 participantes y está reservada a cuentas de gran volumen:
+  se descarta. Política de IA de Meta: los asistentes específicos del negocio están permitidos.
+- **UIF:** rige la **Resolución UIF 43/2024** (modificada por la 56/2024) para agentes y corredores inmobiliarios.
+- **Ley 25.326:** sigue vigente; hay proyectos de reemplazo en el Congreso sin sanción.
+- **Biblioteca de anuncios de Meta:** su API no devuelve anuncios comerciales fuera de la UE; el análisis
+  de competencia trabaja con lo que comparte el asesor.
+
 ## 3. Checklist antes del primer cliente pago
 
 - [ ] Revisión del documento por abogado (datos personales + corretaje).

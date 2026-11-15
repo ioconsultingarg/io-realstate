@@ -42,6 +42,10 @@ como fuente en la configuración de Pages del repo).
    agentes, modelos de Claude, costo variable por cliente, modelo de datos y riesgos.
 6. [06-DIRECCION-VISUAL.md](06-DIRECCION-VISUAL.md) — dirección "Plano": qué se conserva del lenguaje de
    la casa, qué cambia y qué skills de diseño se aplicaron.
+7. [07-MANUAL.md](07-MANUAL.md) — **cómo funciona**: las piezas, el onboarding, los cinco flujos paso a paso,
+   quién hace qué, guía para recorrer la demo y qué simula.
+8. [08-FACTIBILIDAD-E2E.md](08-FACTIBILIDAD-E2E.md) — **implementación real**: qué es factible hoy y qué no,
+   arquitectura, cuentas y trámites, datos, costos y precios revisados, plan de 13 semanas, legal y riesgos.
 
 ## En una línea
 
