@@ -11,7 +11,22 @@ captación, tasación, marketing, capacitación y más), que conoce la forma de 
 atiende y trabaja por **WhatsApp** y entrega trabajo presentable con la firma del corredor y **dentro del
 marco legal argentino**.
 
-Etapa: **análisis y diseño** (14/11/2026). Todavía no hay código.
+Etapa: **demo vendible** (14/11/2026): una app navegable con datos ficticios, sin backend, en [`demo/`](demo/).
+
+## Demo
+
+Recorrido de una inmobiliaria ficticia: la consulta de las 23:14 atendida y agendada, la bandeja de
+clientes con la calificación hecha por el agente, el asistente interno (tasación con informe para firmar,
+análisis de competencia y práctica de objeciones), el catálogo de agentes y el cerebro.
+
+```bash
+cd demo
+npm install
+npm run dev
+```
+
+Se publica en GitHub Pages con el flujo `.github/workflows/pages.yml` (hay que elegir *GitHub Actions*
+como fuente en la configuración de Pages del repo).
 
 ## Orden de lectura
 
@@ -25,6 +40,8 @@ Etapa: **análisis y diseño** (14/11/2026). Todavía no hay código.
    precios (hipótesis) y embudo.
 5. [05-ARQUITECTURA-Y-COSTOS.md](05-ARQUITECTURA-Y-COSTOS.md) — stack, canal del equipo, diseño de
    agentes, modelos de Claude, costo variable por cliente, modelo de datos y riesgos.
+6. [06-DIRECCION-VISUAL.md](06-DIRECCION-VISUAL.md) — dirección "Plano": qué se conserva del lenguaje de
+   la casa, qué cambia y qué skills de diseño se aplicaron.
 
 ## En una línea
 
@@ -37,4 +54,4 @@ atención al cliente final, capa legal argentina y precio público.
 1. Validar en 5 entrevistas: qué compran primero (atención 24/7 o agentes internos) y el precio.
 2. Jurisdicción del piloto (CABA o una provincia) y revisión legal.
 3. Canal del equipo: WhatsApp 1:1 + panel (propuesto) o grupos, según lo que permita la API oficial.
-4. Primer entregable a construir: la **demo vendible** estática (paso 0 de `04`).
+4. Publicar la demo en GitHub Pages y usarla en las primeras entrevistas.

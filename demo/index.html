@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es-AR" data-tema="oscuro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="IO-RealState: un equipo de agentes de IA para tu inmobiliaria. Demo con datos ficticios." />
+    <meta name="theme-color" content="#0f0e0c" />
+    <link rel="icon" type="image/svg+xml" href="./icono.svg" />
+    <title>IO-RealState · Demo</title>
+    <script>
+      // oscuro es el predeterminado; el claro se elige desde la cuenta y se recuerda
+      try {
+        var t = localStorage.getItem('iors-tema')
+        if (t === 'claro') document.documentElement.dataset.tema = 'claro'
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
