@@ -23,7 +23,7 @@ export function Hoy() {
         titulo={`Buen día, ${usuaria.nombre}.`}
         bajada={
           <>
-            Mientras dormías, tus agentes atendieron <strong className="font-medium text-ink">9 consultas</strong>, agendaron <strong className="font-medium text-ink">2 visitas</strong> y una tasación. Nadie se quedó sin respuesta.
+            Desde las 23:00: <strong className="font-medium text-ink">9 consultas</strong> atendidas, <strong className="font-medium text-ink">2 visitas</strong> y 1 tasación agendadas.
           </>
         }
       />
@@ -55,7 +55,7 @@ export function Hoy() {
           <div className="p-5 sm:p-7">
             <p className="ceja">Entre las 23:00 y las 08:00</p>
             <h2 id="anoche" className="titular mt-2 text-[34px]">
-              Lo que hicieron <em className="text-marca">anoche</em>
+              Actividad de la noche
             </h2>
             <ol className="relative mt-6 space-y-5 before:absolute before:top-2 before:bottom-2 before:left-[15px] before:w-px before:bg-line">
               {actividadNoche.map((a) => {
@@ -88,9 +88,9 @@ export function Hoy() {
           <div className="relative border-t border-line bg-sunken/60 p-5 lg:border-t-0 lg:border-l">
             <p className="ceja mb-3 flex items-center gap-1.5">
               <MessageSquareText size={13} aria-hidden="true" />
-              23:14 · en vivo
+              Conversación de las 23:14
             </p>
-            <ChatWhatsApp mensajes={lucia.mensajes} contacto={lucia.nombre} reproducir alto="h-[520px]" />
+            <ChatWhatsApp mensajes={lucia.mensajes} contacto={lucia.nombre} alto="h-[520px]" />
           </div>
         </div>
       </section>
@@ -99,7 +99,6 @@ export function Hoy() {
       <section aria-label="Actividad" className="mb-8 grid gap-4 lg:grid-cols-2">
         <div className="tarjeta animate-entrar p-5 sm:p-6" style={retraso(5)}>
           <ConsultasPorHora datos={consultasPorHora} desde={horarioComercial.desde} hasta={horarioComercial.hasta} />
-          <p className="mt-4 text-[13px] text-ink-3">El 41 % de las consultas llega cuando la oficina está cerrada. Antes esperaban hasta el día siguiente.</p>
         </div>
         <div className="tarjeta animate-entrar p-5 sm:p-6" style={retraso(6)}>
           <Embudo etapas={embudo} />

@@ -6,10 +6,13 @@ import { InformeACM } from '../components/InformeACM'
 import { ComparablesUSDm2 } from '../components/Graficos'
 import { Sheet } from '../components/Sheet'
 import { Boton, Chip, Encabezado, iconoAgente, SelloAgente } from '../components/ui'
-import { cerebro, competencia, inmobiliaria, nombreAgente, pedidosEjemplo, roleplay } from '../data/demo'
+import { competencia, inmobiliaria, nombreAgente, pedidosEjemplo, roleplay } from '../data/demo'
 import { calcularACM, usd } from '../lib/acm'
 import { almacenTasacion } from '../lib/tasacion'
 import { almacenCartera } from '../lib/cartera'
+import { almacenCerebro } from '../lib/cerebro'
+import { almacenAvisos, almacenBusquedas, normalizar } from '../lib/busqueda'
+import { agregarRecordatorio, HOY_DEMO, leerRecordatorio } from '../lib/tareas'
 
 type Pedido = (typeof pedidosEjemplo)[number]
 
@@ -19,10 +22,15 @@ const pasos: Record<Pedido['id'], string[]> = {
   roleplay: ['Leyendo tus objeciones frecuentes', 'Armando el personaje del propietario', 'Preparando la devolución con tus criterios'],
 }
 
-interface Turno {
-  pedido: Pedido
-  listo: boolean
+const diasLargos: Record<string, string> = { Hoy: 'hoy', Mañana: 'mañana', Lun: 'el lunes', Mar: 'el martes', Mié: 'el miércoles', Jue: 'el jueves', Vie: 'el viernes', Sáb: 'el sábado', Dom: 'el domingo' }
+const cuandoLargo = (c: string) => {
+  const [dia, hora] = c.split(' ')
+  return `${diasLargos[dia] ?? dia}${hora ? ` a las ${hora}` : ''}`
 }
+
+type Turno =
+  | { tipo: 'pedido'; pedido: Pedido; escrito?: string; listo: boolean }
+  | { tipo: 'nota'; escrito: string; respuesta: string; enlace?: { href: string; texto: string } }
 
 export function Asistente() {
   const [turnos, setTurnos] = useState<Turno[]>([])
@@ -30,21 +38,28 @@ export function Asistente() {
   const [aviso, setAviso] = useState<string | null>(null)
   const [panel, setPanel] = useState<'informe' | 'editor' | null>(null)
   const cartera = almacenCartera.usar()
+  const cerebro = almacenCerebro.usar()
   const reducir = useReducedMotion()
   const fin = useRef<HTMLDivElement>(null)
-  const trabajando = turnos.some((t) => !t.listo)
+  const trabajando = turnos.some((t) => t.tipo === 'pedido' && !t.listo)
 
-  function pedir(p: Pedido) {
+  function pedir(p: Pedido, escrito?: string) {
     if (trabajando) return
     setAviso(null)
     setTexto('')
-    setTurnos((t) => [...t, { pedido: p, listo: Boolean(reducir) }])
+    setTurnos((t) => [...t, { tipo: 'pedido', pedido: p, escrito, listo: Boolean(reducir) }])
+  }
+
+  function nota(escrito: string, respuesta: string, enlace?: { href: string; texto: string }) {
+    setAviso(null)
+    setTexto('')
+    setTurnos((t) => [...t, { tipo: 'nota', escrito, respuesta, enlace }])
   }
 
   useEffect(() => {
-    const pendiente = turnos.findIndex((t) => !t.listo)
+    const pendiente = turnos.findIndex((t) => t.tipo === 'pedido' && !t.listo)
     if (pendiente < 0) return
-    const t = setTimeout(() => setTurnos((ts) => ts.map((x, i) => (i === pendiente ? { ...x, listo: true } : x))), 3300)
+    const t = setTimeout(() => setTurnos((ts) => ts.map((x, i) => (i === pendiente && x.tipo === 'pedido' ? { ...x, listo: true } : x))), 3300)
     return () => clearTimeout(t)
   }, [turnos])
 
@@ -53,19 +68,32 @@ export function Asistente() {
   }, [turnos, reducir])
 
   function enviar() {
-    const t = texto.toLowerCase()
-    const p = pedidosEjemplo.find((x) => t.includes(x.id) || t.includes(x.etiqueta.toLowerCase()) || (x.id === 'roleplay' && t.includes('objeci')) || (x.id === 'tasacion' && t.includes('acm')))
-    if (p) pedir(p)
-    else if (texto.trim()) setAviso('En esta demo el asistente responde a los tres pedidos de ejemplo. Elegí uno de arriba o escribí "tasación", "competencia" u "objeción".')
+    const escrito = texto.trim()
+    if (!escrito || trabajando) return
+    const t = normalizar(escrito)
+
+    if (/^(recordame|recordarme|acordate|anotame|anota|agendame|agenda)(\s|$)/.test(t)) {
+      const r = leerRecordatorio(escrito, HOY_DEMO)
+      if (r && agregarRecordatorio(escrito)) nota(escrito, `Listo. Te lo recuerdo ${cuandoLargo(r.cuando)}: ${r.texto.charAt(0).toLowerCase() + r.texto.slice(1)}.`, { href: '#/busquedas', texto: 'Ver recordatorios' })
+      else setAviso('No entendí qué tengo que recordarte. Probá con "recordame llamar a Tomás el jueves 10".')
+      return
+    }
+    if (/tasa|acm|cuanto vale|valor de/.test(t)) return pedir(pedidosEjemplo.find((x) => x.id === 'tasacion')!, escrito)
+    if (/competen/.test(t)) return pedir(pedidosEjemplo.find((x) => x.id === 'competencia')!, escrito)
+    if (/objeci|practic|roleplay/.test(t)) return pedir(pedidosEjemplo.find((x) => x.id === 'roleplay')!, escrito)
+    if (/busqu|busca|compradores?/.test(t)) {
+      const bs = almacenBusquedas.leer()
+      const nuevos = almacenAvisos.leer().filter((a) => a.llego.startsWith('hoy')).length
+      return nota(escrito, `Tenés ${bs.length} búsquedas activas (${bs.map((b) => b.cliente).join(', ')}) y ${nuevos} avisos de hoy para revisar.`, { href: '#/busquedas', texto: 'Abrir búsquedas' })
+    }
+    nota(escrito, 'Puedo armar una tasación ("tasación de…"), anotar recordatorios ("recordame…"), analizar la competencia de tu zona y practicar objeciones. Las búsquedas de compradores se manejan en Búsquedas.')
   }
 
   return (
     <>
       <Encabezado
-        ceja="Asistente · tu equipo interno"
-        titulo="Pedile trabajo"
-        acento="como a un compañero."
-        bajada="Cada departamento tiene un agente que ya conoce tu cartera, tus zonas y tu forma de trabajar. Le escribís acá o por WhatsApp y te devuelve el trabajo hecho."
+        ceja="Pedidos al equipo"
+        titulo="Asistente"
       />
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
@@ -101,14 +129,26 @@ export function Asistente() {
                 <motion.div key={i} initial={reducir ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }} className="space-y-3">
                   <div className="flex justify-end">
                     <p className="max-w-[85%] rounded-2xl rounded-br-md bg-boton px-4 py-3 text-[15px] leading-snug text-sobre-boton">
-                      <span className="num mr-1.5 opacity-60">#{t.pedido.etiqueta.toLowerCase()}</span>
-                      {t.pedido.texto}
+                      {t.tipo === 'pedido' && !t.escrito && <span className="num mr-1.5 opacity-60">#{t.pedido.etiqueta.toLowerCase()}</span>}
+                      {t.tipo === 'pedido' ? (t.escrito ?? t.pedido.texto) : t.escrito}
                     </p>
                   </div>
-                  <div className="tarjeta p-5 sm:p-6">
-                    <SelloAgente agente={t.pedido.agente} nombre={`Agente de ${nombreAgente(t.pedido.agente).toLowerCase()}`} />
-                    {t.listo ? <Resultado id={t.pedido.id} onPanel={setPanel} /> : <Trabajando pasos={pasos[t.pedido.id]} />}
-                  </div>
+                  {t.tipo === 'pedido' ? (
+                    <div className="tarjeta p-5 sm:p-6">
+                      <SelloAgente agente={t.pedido.agente} nombre={`Agente de ${nombreAgente(t.pedido.agente).toLowerCase()}`} />
+                      {t.listo ? <Resultado id={t.pedido.id} onPanel={setPanel} /> : <Trabajando pasos={pasos[t.pedido.id]} />}
+                    </div>
+                  ) : (
+                    <div className="tarjeta p-5">
+                      <SelloAgente agente="direccion" nombre="Asistente" />
+                      <p className="mt-3 text-[15px] leading-relaxed text-ink">{t.respuesta}</p>
+                      {t.enlace && (
+                        <a href={t.enlace.href} className="mt-3 inline-flex min-h-10 items-center gap-1 text-[14px] font-medium text-marca underline-offset-4 hover:underline">
+                          {t.enlace.texto} →
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -146,7 +186,7 @@ export function Asistente() {
               <div className="flex items-center justify-between gap-2 px-1">
                 <span className="inline-flex items-center gap-1 text-[12px] text-ink-3">
                   <Hash size={13} aria-hidden="true" />
-                  tasación · marketing · capacitación
+                  tasación · recordatorios · competencia · objeciones
                 </span>
                 <button
                   type="submit"

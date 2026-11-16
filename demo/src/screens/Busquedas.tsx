@@ -1,6 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { motion } from 'motion/react'
-import { BellRing, Check, ClipboardPaste, Copy, Inbox, Mail, MessageCircle, Minus, PenLine, Pencil, Plus, ThumbsDown, ThumbsUp, Trash2, Undo2, X } from 'lucide-react'
+import { BellRing, Check, ClipboardPaste, Copy, MessageCircle, Minus, PenLine, Pencil, Plus, ThumbsDown, ThumbsUp, Trash2, Undo2, X } from 'lucide-react'
 import { Sheet } from '../components/Sheet'
 import { Boton, Chip, Encabezado } from '../components/ui'
 import { usuaria } from '../data/demo'
@@ -472,6 +472,62 @@ function Recordatorios() {
   )
 }
 
+/* ——— filtros para crear las alertas en cada portal ——— */
+
+function Alertas({ b }: { b: BusquedaV }) {
+  const [copiado, setCopiado] = useState(false)
+  const filtros = [
+    ['Operación', 'Venta'],
+    ['Barrios', b.barrios.join(', ') || 'Todos'],
+    ['Ambientes', b.ambientesMin === 1 ? 'Desde monoambiente' : `Desde ${b.ambientesMin}`],
+    ['Precio', `${b.precioMin ? `USD ${b.precioMin.toLocaleString('es-AR')} a ` : 'Hasta '}USD ${b.precioMax.toLocaleString('es-AR')}`],
+    ['Palabras clave', b.obligatorios.join(', ') || '—'],
+  ]
+  const texto = filtros.map(([k, v]) => `${k}: ${v}`).join('\n')
+  async function copiar() {
+    try {
+      await navigator.clipboard.writeText(texto)
+      setCopiado(true)
+      setTimeout(() => setCopiado(false), 1800)
+    } catch {
+      /* sin portapapeles */
+    }
+  }
+  return (
+    <div className="tarjeta p-5">
+      <h2 className="flex items-center gap-2 text-[16px] font-medium">
+        <BellRing size={16} aria-hidden="true" className="text-ink-3" />
+        Alertas para {b.cliente}
+      </h2>
+      <p className="text-[13px] text-ink-3">Cargá estos filtros en cada portal y reenviá las alertas a tu casilla de búsquedas.</p>
+      <dl className="mt-3 divide-y divide-line text-[14px]">
+        {filtros.map(([k, v]) => (
+          <div key={k} className="grid grid-cols-[96px_1fr] gap-2 py-2">
+            <dt className="text-ink-3">{k}</dt>
+            <dd className="text-ink">{v}</dd>
+          </div>
+        ))}
+      </dl>
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+        <p className="flex flex-wrap gap-1.5">
+          {(['Zonaprop', 'Argenprop', 'Mercado Libre'] as Portal[]).map((p) => (
+            <Chip key={p} tono={b.alertas.includes(p) ? 'ok' : 'neutro'}>
+              {b.alertas.includes(p) ? <Check size={12} aria-hidden="true" /> : null}
+              {p}
+            </Chip>
+          ))}
+        </p>
+        <Boton variante="secundario" icono={copiado ? Check : Copy} onClick={copiar}>
+          {copiado ? 'Copiado' : 'Copiar filtros'}
+        </Boton>
+      </div>
+      <p role="status" className="sr-only">
+        {copiado ? 'Filtros copiados' : ''}
+      </p>
+    </div>
+  )
+}
+
 /* ——— pantalla ——— */
 
 export function Busquedas() {
@@ -512,10 +568,8 @@ export function Busquedas() {
   return (
     <>
       <Encabezado
-        ceja="Búsquedas · lo que busca cada cliente"
-        titulo="Buscá menos,"
-        acento="elegí más."
-        bajada="Cargás lo que busca cada cliente y el agente revisa las alertas de los portales y la red de colegas. Te avisa lo que coincide, te dice por qué y te deja el mensaje listo para mandar. Probalo: creá una búsqueda o pegá un aviso."
+        ceja="Compradores"
+        titulo="Búsquedas"
         derecha={
           <div className="tarjeta grid grid-cols-3 divide-x divide-line text-center">
             {[
@@ -532,7 +586,7 @@ export function Busquedas() {
         }
       />
 
-      <div className="grid gap-5 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)_300px]">
+      <div className="grid gap-5 lg:grid-cols-[260px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)_340px]">
         <nav aria-label="Búsquedas activas" className="space-y-2">
           <Boton icono={Plus} onClick={() => setPanel('nueva')} className="mb-2 w-full">
             Nueva búsqueda
@@ -692,24 +746,7 @@ export function Busquedas() {
 
         <aside className="space-y-4 lg:col-span-2 xl:col-span-1">
           <Recordatorios />
-          <div className="tarjeta p-5">
-            <h2 className="text-[16px] font-medium">Cómo llegan los avisos</h2>
-            <ol className="mt-3 space-y-3 text-[14px] text-ink-2">
-              <li className="flex gap-2.5">
-                <BellRing size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-ink-3" />
-                Creás una alerta en cada portal con los filtros que te arma el agente.
-              </li>
-              <li className="flex gap-2.5">
-                <Mail size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-ink-3" />
-                Los portales mandan los avisos nuevos a tu casilla de búsquedas.
-              </li>
-              <li className="flex gap-2.5">
-                <Inbox size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-ink-3" />
-                El agente los junta, saca duplicados y te avisa solo lo que coincide.
-              </li>
-            </ol>
-            <p className="mt-3 text-[12px] text-ink-3">Sin robots que recorran portales: se usan las alertas que cualquier usuario puede crear.</p>
-          </div>
+          {actual && <Alertas b={actual} />}
         </aside>
       </div>
 

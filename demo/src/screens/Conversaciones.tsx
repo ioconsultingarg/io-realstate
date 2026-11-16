@@ -1,12 +1,71 @@
 import { useState, type FormEvent } from 'react'
-import { ArrowLeft, ArrowUp, CalendarCheck2, Hand, PauseCircle, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowUp, CalendarCheck2, CalendarPlus, Hand, PauseCircle, Sparkles } from 'lucide-react'
 import { ChatWhatsApp } from '../components/ChatWhatsApp'
 import { Boton, ChipTemperatura, Encabezado, SelloAgente } from '../components/ui'
 import { conversaciones, nombreAgente, type Conversacion, type Mensaje } from '../data/demo'
 import { crearAlmacen } from '../lib/almacen'
+import { agendarVisita, proximosDias } from '../lib/tareas'
 
 const almacenTomadas = crearAlmacen<Record<string, boolean>>('tomadas', () => ({}))
 const almacenRespuestas = crearAlmacen<Record<string, Mensaje[]>>('respuestas', () => ({}))
+const almacenAgendadas = crearAlmacen<Record<string, string>>('agendadas', () => ({}))
+
+function AgendarVisita({ conversacion }: { conversacion: Conversacion }) {
+  const dias = proximosDias()
+  const [abierto, setAbierto] = useState(false)
+  const [lugar, setLugar] = useState('')
+  const [dia, setDia] = useState(1)
+  const [hora, setHora] = useState('11:00')
+
+  function guardar(e: FormEvent) {
+    e.preventDefault()
+    if (!lugar.trim()) return
+    const etiqueta = dias[dia].etiqueta
+    agendarVisita(`Visita con ${conversacion.nombre} en ${lugar.trim()}`, dia, etiqueta, hora)
+    almacenAgendadas.cambiar((a) => ({ ...a, [conversacion.id]: `Visita ${etiqueta.toLowerCase()} ${hora} · ${lugar.trim()}` }))
+    setAbierto(false)
+    setLugar('')
+  }
+
+  if (!abierto)
+    return (
+      <Boton variante="secundario" icono={CalendarPlus} onClick={() => setAbierto(true)} className="mt-3 w-full">
+        Agendar visita
+      </Boton>
+    )
+  return (
+    <form onSubmit={guardar} className="mt-3 space-y-3 rounded-xl border border-line p-3">
+      <label className="block">
+        <span className="mb-1 block text-[13px] font-medium">Propiedad</span>
+        <input autoComplete="off" name="lugar" value={lugar} onChange={(e) => setLugar(e.target.value)} placeholder="Cabildo 2340 4.º B…" className="block min-h-11 w-full rounded-xl border border-line-2 bg-surface px-3 text-[16px] outline-none placeholder:text-ink-3 focus:border-marca" />
+      </label>
+      <div className="grid grid-cols-2 gap-2">
+        <label className="block">
+          <span className="mb-1 block text-[13px] font-medium">Día</span>
+          <select name="dia" value={dia} onChange={(e) => setDia(Number(e.target.value))} className="block min-h-11 w-full rounded-xl border border-line-2 bg-surface px-3 text-[16px] outline-none focus:border-marca">
+            {dias.map((d) => (
+              <option key={d.dia} value={d.dia}>
+                {d.etiqueta}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block">
+          <span className="mb-1 block text-[13px] font-medium">Hora</span>
+          <input type="time" name="hora" value={hora} onChange={(e) => setHora(e.target.value)} className="block min-h-11 w-full rounded-xl border border-line-2 bg-surface px-3 text-[16px] outline-none focus:border-marca" />
+        </label>
+      </div>
+      <div className="flex justify-end gap-2">
+        <Boton variante="fantasma" onClick={() => setAbierto(false)}>
+          Cancelar
+        </Boton>
+        <Boton type="submit" icono={CalendarCheck2} disabled={!lugar.trim()}>
+          Agendar
+        </Boton>
+      </div>
+    </form>
+  )
+}
 
 const filtros = [
   { id: 'todas', etiqueta: 'Todas', pasa: () => true },
@@ -18,6 +77,7 @@ export function Conversaciones({ param }: { param: string | null }) {
   const [filtro, setFiltro] = useState<(typeof filtros)[number]['id']>('todas')
   const tomadas = almacenTomadas.usar()
   const respuestas = almacenRespuestas.usar()
+  const agendadas = almacenAgendadas.usar()
   const [texto, setTexto] = useState('')
   const seleccion = conversaciones.find((c) => c.id === param) ?? null
   const actual = seleccion ?? conversaciones[0]
@@ -37,10 +97,8 @@ export function Conversaciones({ param }: { param: string | null }) {
   return (
     <>
       <Encabezado
-        ceja="Clientes · WhatsApp de la inmobiliaria"
-        titulo="Cada consulta,"
-        acento="respondida."
-        bajada="El agente atiende con tu cartera real, califica y agenda. Lo que necesita criterio humano —precio, ofertas, reclamos— pasa al asesor con el resumen hecho."
+        ceja="WhatsApp de la inmobiliaria"
+        titulo="Clientes"
       />
 
       <div className="grid gap-4 lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)_300px]">
@@ -165,8 +223,9 @@ export function Conversaciones({ param }: { param: string | null }) {
               <CalendarCheck2 size={13} aria-hidden="true" />
               Próximo paso
             </p>
-            <p className="mt-1 text-[14px] font-medium text-ink">{actual.proximo}</p>
+            <p className="mt-1 text-[14px] font-medium text-ink">{agendadas[actual.id] ?? actual.proximo}</p>
           </div>
+          <AgendarVisita key={actual.id} conversacion={actual} />
 
           <h3 className="ceja mt-6 mb-2">Calificación</h3>
           <dl className="divide-y divide-line text-[14px]">

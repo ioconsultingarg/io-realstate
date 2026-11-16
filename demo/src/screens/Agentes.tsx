@@ -11,10 +11,8 @@ export function Agentes() {
   return (
     <>
       <Encabezado
-        ceja="Agentes · uno por departamento"
-        titulo="Tu equipo,"
-        acento="sin sueldos extra."
-        bajada="Activá los que tu operación necesita. Todos comparten el mismo cerebro: tu cartera, tus zonas, tus precios y tu forma de hablar."
+        ceja="Configuración"
+        titulo="Agentes"
         derecha={
           <div className="tarjeta flex items-center gap-4 px-5 py-4">
             <span className="num text-[40px] leading-none font-medium">{encendidos}</span>
@@ -28,7 +26,7 @@ export function Agentes() {
       />
 
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {agentes.map((a, i) => {
+        {agentes.filter((a) => a.estado !== 'proximamente').map((a, i) => {
           const Icono = iconoAgente[a.id]
           const proximo = a.estado === 'proximamente'
           const on = activos[a.id]

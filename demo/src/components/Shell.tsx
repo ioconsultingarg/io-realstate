@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { BookOpen, Brain, ExternalLink, FileText, Info, LayoutDashboard, MessagesSquare, Moon, SearchCheck, Sparkles, Sun, UsersRound, type LucideIcon } from 'lucide-react'
+import { BookOpen, Brain, ExternalLink, Info, LayoutDashboard, MessagesSquare, Moon, SearchCheck, Sparkles, Sun, UsersRound, type LucideIcon } from 'lucide-react'
 import { conversaciones, inmobiliaria, usuaria } from '../data/demo'
 import type { Ruta } from '../lib/ruta'
 import { useTema } from '../lib/tema'
@@ -186,29 +186,11 @@ export function Shell({ ruta, children }: { ruta: Ruta; children: ReactNode }) {
             <ExternalLink size={16} aria-hidden="true" className="text-ink-3" />
             <span className="sr-only">(se abre en una pestaña nueva)</span>
           </a>
-          <a
-            href="./io-realstate-propuesta.pdf"
-            target="_blank"
-            rel="noopener"
-            className="press flex min-h-14 items-center gap-3 rounded-2xl border border-line bg-surface px-4 text-[15px] font-medium text-ink hover:bg-sunken"
-          >
-            <FileText size={18} aria-hidden="true" className="text-marca" />
-            <span className="flex-1">
-              Propuesta y planes
-              <span className="block text-[13px] font-normal text-ink-3">PDF · qué hace, qué no hace y cuánto cuesta</span>
-            </span>
-            <ExternalLink size={16} aria-hidden="true" className="text-ink-3" />
-            <span className="sr-only">(se abre en una pestaña nueva)</span>
-          </a>
 
           <div className="flex gap-3 rounded-2xl border border-line p-4 text-[14px] leading-relaxed text-ink-2">
             <Info size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-ink-3" />
             <p>
-              Esta es una demo con datos ficticios: la inmobiliaria, las personas y las propiedades son de ejemplo. Para verla con tu cartera escribinos a{' '}
-              <a href="mailto:contacto@ioconsulting.com.ar" className="font-medium text-ink underline decoration-line-2 underline-offset-4 hover:decoration-marca">
-                contacto@ioconsulting.com.ar
-              </a>
-              .
+              Datos de ejemplo: la inmobiliaria, las personas y las propiedades son ficticias.
             </p>
           </div>
 

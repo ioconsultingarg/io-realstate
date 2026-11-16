@@ -47,8 +47,9 @@ export function leerRecordatorio(frase: string, hoy = new Date()): Omit<Recordat
   // limpiar: "recordame", día, hora y conectores sueltos
   t = t
     .replace(/^\s*(recordame|recordarme|acordate de|anota(me)?|agenda(me)?)\s*(que\s*)?/i, '')
-    .replace(/\b(el|este|el próximo|el proximo)?\s*(pasado mañana|pasado manana|mañana|manana|hoy|domingo|lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado)\b/gi, '')
-    .replace(/\b(a las|a la|las)?\s*\d{1,2}([:.]\d{2})?\s*(hs|h|horas)?\b(?!\s*(m2|amb|mil|k\b))/i, (m) => (horaTexto ? '' : m))
+    // cada parte que se quita deja un espacio, para no pegar las palabras de alrededor
+    .replace(/\b(el|este|el próximo|el proximo)?\s*(pasado mañana|pasado manana|mañana|manana|hoy|domingo|lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado)\b/gi, ' ')
+    .replace(/\b(a las|a la|las)?\s*\d{1,2}([:.]\d{2})?\s*(hs|h|horas)?\b(?!\s*(m2|amb|mil|k\b))/i, (m) => (horaTexto ? ' ' : m))
     .replace(/\s{2,}/g, ' ')
     .replace(/^[\s,]+|[\s,.]+$/g, '')
   n = normalizar(t)
@@ -67,11 +68,23 @@ const iniciales: Recordatorio[] = [
 export const almacenRecordatorios = crearAlmacen<Recordatorio[]>('recordatorios', () => iniciales)
 
 /** la demo transcurre el martes 17 de noviembre (ver fechaDemo): los días se cuentan desde ahí */
-const HOY_DEMO = new Date(2026, 10, 17)
+export const HOY_DEMO = new Date(2026, 10, 17)
 
 export function agregarRecordatorio(frase: string) {
   const r = leerRecordatorio(frase, HOY_DEMO)
   if (!r) return false
   almacenRecordatorios.cambiar((rs) => [...rs, { ...r, id: nuevoId(), hecho: false }].sort((a, b) => a.dia - b.dia || a.cuando.localeCompare(b.cuando)))
   return true
+}
+
+/** días para agendar desde la ficha del cliente, contados desde el día de la demo */
+export function proximosDias(cantidad = 6) {
+  const nombres = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+  return Array.from({ length: cantidad }, (_, i) => ({ dia: i, etiqueta: i === 0 ? 'Hoy' : i === 1 ? 'Mañana' : nombres[(HOY_DEMO.getDay() + i) % 7] }))
+}
+
+export function agendarVisita(texto: string, dia: number, etiqueta: string, hora: string) {
+  almacenRecordatorios.cambiar((rs) =>
+    [...rs, { id: nuevoId(), texto, dia, cuando: `${etiqueta} ${hora}`, origen: 'Google Calendar', hecho: false }].sort((a, b) => a.dia - b.dia || a.cuando.localeCompare(b.cuando)),
+  )
 }

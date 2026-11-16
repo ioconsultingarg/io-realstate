@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { CircleCheck, CircleDashed, CircleDot, Download, RefreshCw, Upload } from 'lucide-react'
-import { Encabezado } from '../components/ui'
-import { cerebro, inmobiliaria } from '../data/demo'
+import { BadgeCheck, ChevronRight, CircleCheck, CircleDashed, CircleDot, Download, RefreshCw, Upload } from 'lucide-react'
+import { Sheet } from '../components/Sheet'
+import { Boton, Encabezado } from '../components/ui'
+import { inmobiliaria, usuaria } from '../data/demo'
+import { almacenCerebro, aprobarTema, editarTema } from '../lib/cerebro'
 import { almacenCartera, estadosCartera, importarCSV, plantillaCSV, type EstadoCartera, type ResultadoImportacion } from '../lib/cartera'
 
 const estados = {
@@ -20,6 +22,9 @@ const claseEstado: Record<EstadoCartera, string> = {
 export function Cerebro() {
   const cartera = almacenCartera.usar()
   const [informe, setInforme] = useState<ResultadoImportacion | null>(null)
+  const cerebro = almacenCerebro.usar()
+  const [abierto, setAbierto] = useState<string | null>(null)
+  const tema = cerebro.find((t) => t.id === abierto)
   const aprobados = cerebro.filter((c) => c.estado === 'aprobado').length
   const total = cerebro.length
   const r = 34
@@ -28,10 +33,9 @@ export function Cerebro() {
   return (
     <>
       <Encabezado
-        ceja="Cerebro · lo que sabe tu inmobiliaria"
-        titulo="Lo que hoy está en tu cabeza,"
-        acento="escrito."
-        bajada="Un asistente te entrevista en 10 temas y redacta cada documento. Vos lo revisás y lo aprobás. Los agentes trabajan solo con lo aprobado."
+        ceja="Base de conocimiento"
+        titulo="Cerebro"
+        bajada="Los agentes usan solo los temas aprobados."
         derecha={
           <div className="tarjeta flex items-center gap-4 px-5 py-4">
             <svg width="84" height="84" viewBox="0 0 84 84" role="img" aria-label={`${aprobados} de ${total} temas aprobados`}>
@@ -59,17 +63,20 @@ export function Cerebro() {
             {cerebro.map((c, i) => {
               const e = estados[c.estado]
               return (
-                <li key={c.tema} className="hover-fila grid grid-cols-[28px_1fr_auto] items-center gap-3 px-4 py-3">
-                  <span className="num text-[12px] text-ink-3">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="min-w-0">
-                    <span className="block text-[15px] font-medium">{c.tema}</span>
-                    <span className="block truncate text-[13px] text-ink-3">{c.detalle}</span>
-                  </span>
-                  <span className={`inline-flex items-center gap-1.5 text-[12px] font-medium ${e.clase}`}>
-                    <e.Icono size={15} aria-hidden="true" />
-                    <span className="hidden sm:inline">{e.etiqueta}</span>
-                    <span className="sr-only sm:hidden">{e.etiqueta}</span>
-                  </span>
+                <li key={c.id}>
+                  <button type="button" onClick={() => setAbierto(c.id)} className="hover-fila grid w-full grid-cols-[28px_1fr_auto_16px] items-center gap-3 px-4 py-3 text-left">
+                    <span className="num text-[12px] text-ink-3">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="min-w-0">
+                      <span className="block text-[15px] font-medium">{c.tema}</span>
+                      <span className="block truncate text-[13px] text-ink-3">{c.detalle}</span>
+                    </span>
+                    <span className={`inline-flex items-center gap-1.5 text-[12px] font-medium ${e.clase}`}>
+                      <e.Icono size={15} aria-hidden="true" />
+                      <span className="hidden sm:inline">{e.etiqueta}</span>
+                      <span className="sr-only sm:hidden">{e.etiqueta}</span>
+                    </span>
+                    <ChevronRight size={16} aria-hidden="true" className="text-ink-3" />
+                  </button>
                 </li>
               )
             })}
@@ -77,6 +84,38 @@ export function Cerebro() {
           <p className="mt-3 text-[13px] text-ink-3">
             Los textos legales llevan el pie de {inmobiliaria.corredor}, <span className="num">{inmobiliaria.matricula}</span>, en todo lo que sale a un cliente.
           </p>
+          <Sheet abierto={Boolean(tema)} onCerrar={() => setAbierto(null)} titulo={tema ? `Cerebro · ${tema.tema}` : 'Cerebro'}>
+            {tema && (
+              <div className="space-y-4 p-6">
+                <p className={`inline-flex items-center gap-1.5 text-[13px] font-medium ${estados[tema.estado].clase}`}>
+                  {(() => {
+                    const E = estados[tema.estado].Icono
+                    return <E size={15} aria-hidden="true" />
+                  })()}
+                  {estados[tema.estado].etiqueta}
+                  {tema.aprobadoPor && <span className="font-normal text-ink-3">· por {tema.aprobadoPor}</span>}
+                </p>
+                <label htmlFor="contenido-tema" className="block text-[13px] font-medium">
+                  Lo que saben los agentes sobre {tema.tema.toLowerCase()}
+                </label>
+                <textarea
+                  id="contenido-tema"
+                  name="contenido-tema"
+                  rows={10}
+                  value={tema.contenido}
+                  onChange={(e) => editarTema(tema.id, e.target.value)}
+                  placeholder="Escribí lo que tienen que saber los agentes…"
+                  className="block w-full resize-y rounded-xl border border-line-2 bg-surface p-4 text-[15px] leading-relaxed text-ink outline-none placeholder:text-ink-3 focus:border-marca"
+                />
+                <p className="text-[13px] text-ink-3">Cualquier cambio vuelve el tema a revisión. Los agentes lo usan cuando está aprobado.</p>
+                <div className="flex justify-end border-t border-line pt-4">
+                  <Boton icono={BadgeCheck} onClick={() => aprobarTema(tema.id, `${usuaria.nombre} ${usuaria.apellido}`)} disabled={tema.estado === 'aprobado' || !tema.contenido.trim()}>
+                    {tema.estado === 'aprobado' ? 'Aprobado' : 'Aprobar'}
+                  </Boton>
+                </div>
+              </div>
+            )}
+          </Sheet>
         </section>
 
         <section aria-labelledby="cartera">

@@ -20,7 +20,7 @@ from generar_manual import CSS, MARCA
 RAIZ = Path(__file__).resolve().parent.parent
 CAPTURAS = Path(__file__).resolve().parent / 'capturas'
 SALIDA = RAIZ / 'IO-RealState-Propuesta.pdf'
-COPIA_DEMO = RAIZ / 'demo' / 'public' / 'io-realstate-propuesta.pdf'
+COPIA_DEMO = None  # la demo no sirve material de venta
 DEMO = 'https://ioconsultingarg.github.io/io-realstate/'
 CONTACTO = 'contacto@ioconsulting.com.ar'
 
@@ -240,7 +240,8 @@ def main():
         )
         nav.close()
     temporal.unlink()
-    shutil.copyfile(SALIDA, COPIA_DEMO)
+    if COPIA_DEMO:
+        shutil.copyfile(SALIDA, COPIA_DEMO)
     print('PDF:', SALIDA, f'({SALIDA.stat().st_size // 1024} KB)')
 
 

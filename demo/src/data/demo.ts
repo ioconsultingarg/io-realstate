@@ -19,8 +19,8 @@ export const fechaDemo = 'Martes, 17 de noviembre'
 /* ——— Panel ——— */
 
 export const kpis = [
-  { id: 'respuesta', etiqueta: 'Primera respuesta', valor: '38', unidad: 's', detalle: 'mediana de la semana', delta: 'antes: 3 h 40 min' },
-  { id: 'fuera', etiqueta: 'Fuera de horario', valor: '41', unidad: '%', detalle: '87 de 212 consultas', delta: 'atendidas igual' },
+  { id: 'respuesta', etiqueta: 'Primera respuesta', valor: '38', unidad: 's', detalle: 'mediana de la semana', delta: 'p90: 1 min 12 s' },
+  { id: 'fuera', etiqueta: 'Fuera de horario', valor: '41', unidad: '%', detalle: '87 de 212 consultas', delta: 'fuera de 9 a 19 h' },
   { id: 'calificados', etiqueta: 'Leads calificados', valor: '57', unidad: '', detalle: '14 calientes', delta: '+19 vs. semana anterior' },
   { id: 'visitas', etiqueta: 'Visitas agendadas', valor: '19', unidad: '', detalle: 'por los agentes', delta: '2 ausencias' },
 ] as const
