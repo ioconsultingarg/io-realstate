@@ -290,6 +290,9 @@ Los datos quedan en la carpeta `IO-RealState/` de la computadora del asesor, en 
 una ficha por cliente en `busquedas/`, `avisos-vistos.md`, `comparables.md`, `tasaciones/` y `resumenes/`. Las
 reglas de afinidad y el método de tasación son los mismos de la demo.
 
+Las ilustraciones al final de esta sección muestran cuatro pedidos con los datos ficticios de `plugin/ejemplo/`.
+No son capturas de la app de Claude.
+
 ### Plugin y producto completo
 
 | | Plugin para Claude | Producto completo |

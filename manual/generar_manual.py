@@ -33,6 +33,12 @@ FIGURAS = {
         ('busquedas-borrador', 'El borrador del mensaje al cliente, escrito como escribe la asesora. Lo manda ella.'),
     ],
     '## 9.': [('agentes', 'Pantalla Agentes: el catálogo, con los que están activos y los que vienen.')],
+    '## 11.': [
+        ('plugin-1-busquedas', 'Ilustración: el asesor pregunta por sus búsquedas activas.'),
+        ('plugin-2-alertas', 'Ilustración: la revisión de alertas, con afinidad y el porqué de cada aviso.'),
+        ('plugin-3-mensaje', 'Ilustración: el mensaje para el cliente en la voz del asesor.'),
+        ('plugin-4-tasacion', 'Ilustración: la tasación con comparables, pendiente de firma.'),
+    ],
     '## 10.': [('busquedas-aviso', 'Agregar un aviso: se pega el texto y el agente completa los datos y muestra la afinidad antes de guardar.'), ('tasacion-editor', 'Editor de tasación: superficie, ajuste y comparables, con el valor recalculado en vivo.'), ('cerebro', 'Pantalla Cerebro: los 10 temas y la cartera sincronizada.'), ('movil-hoy', 'La misma demo en el celular.')],
 }
 
@@ -62,6 +68,7 @@ pre.mermaid { background: #fff; border: 1px solid var(--line); border-radius: 3m
 pre.mermaid svg { max-width: 100%; max-height: 165mm; width: auto; height: auto; }
 figure { margin: 4mm 0 6mm; break-inside: avoid; }
 figure img { width: 100%; border-radius: 2.5mm; border: 1px solid var(--line); }
+figure img[src*='plugin-'] { border: 0; border-radius: 4mm; max-width: 150mm; display: block; margin: 0 auto; }
 figure.movil img { width: 42%; display: block; margin: 0 auto; }
 figcaption { font-size: 8.5pt; color: var(--ink3); margin-top: 1.5mm; text-align: center; }
 .portada { height: 255mm; display: flex; flex-direction: column; justify-content: space-between; break-after: page;

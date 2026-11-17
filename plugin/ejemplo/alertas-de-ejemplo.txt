@@ -1,0 +1,13 @@
+Datos ficticios para probar IO-RealState sin conectar Gmail. Pegar todo en Claude después de "Revisá estas alertas".
+
+--- Mail 1 · Zonaprop · Nuevas propiedades para tu búsqueda "Villa Urquiza 4 amb"
+Venta · Departamento · Melián 3120, Coghlan. 4 ambientes, 118 m² totales. Terraza propia de 30 m², segundo piso por ascensor, a 4 cuadras del colegio. U$S 289.000. Expensas $ 95.000.
+Venta · PH · Monroe 4880, Villa Urquiza. 4 ambientes, 105 m². Balcón corrido y cochera fija. U$S 305.000.
+
+--- Mail 2 · Argenprop · Alerta de búsqueda
+Venta · Departamento · Melián 3120 4° A, Coghlan. 4 amb, 118 m². Terraza propia. US$ 289.000.
+Venta · Departamento · Juramento 2655, Belgrano. 3 ambientes, 71 m², balcón aterrazado, apto crédito, a 2 cuadras del subte D. U$S 205.000.
+
+--- Mail 3 · Mercado Libre · Nuevos inmuebles que coinciden con tu búsqueda
+PH 4 ambientes en Villa Urquiza, Pedraza 2450. 125 m² con patio de 22 m², sin expensas. Escalera al primer piso. U$S 262.000.
+Departamento 3 ambientes en Belgrano, Mendoza 2140. 68 m², contrafrente, muy luminoso. U$S 189.000.

@@ -72,6 +72,8 @@ CSS_VENTA = """
 .funcion { display: grid; grid-template-columns: 0.95fr 1.25fr; gap: 6mm; align-items: center; margin: 0 0 7mm; break-inside: avoid; }
 .funcion h3 { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 18pt; margin: 0 0 2mm; }
 .funcion figure { margin: 0; }
+.dos figure img { border-radius: 4mm; border: 0; }
+figure img[src*='plugin-'] { border: 0; border-radius: 4mm; }
 .funcion ul { padding-left: 4mm; }
 .nunca { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm 6mm; margin: 4mm 0 0; padding: 0; list-style: none; }
 .nunca li { padding-left: 6mm; position: relative; }
@@ -187,17 +189,7 @@ def main():
       </ul>
     </div>
     <div>
-      <div class="chat">
-        <p class="yo">Revisá las alertas</p>
-        <div class="ia">
-          <p style="margin:0 0 2mm">23 avisos nuevos · 7 duplicados · 12 no cumplían</p>
-          <p style="margin:0"><b>Familia Ocampo · 2</b></p>
-          <p style="margin:1mm 0 0">1. Melián 3120, Coghlan · USD 289.000 · 94<br><span class="ok">✓ terraza propia</span> · <span class="ok">✓ a 4 cuadras del colegio</span> · <span class="no">✗ sin cochera</span></p>
-          <p style="margin:2mm 0 0">2. Pedraza 2450, Villa Urquiza · USD 262.000 · 85<br><span class="ok">✓ patio</span> · <span class="no">✗ escalera al 1.er piso</span></p>
-          <p style="margin:3mm 0 0">¿Cuáles te sirven? Te armo el mensaje para cada cliente.</p>
-        </div>
-      </div>
-      <p class="nota" style="margin-top:2mm">Ejemplo con datos ficticios.</p>
+      {img('plugin-2-alertas')}
     </div>
   </div>
   <div class="dos" style="margin-top:6mm">
@@ -205,6 +197,18 @@ def main():
     <div class="marco"><b style="color:var(--ink)">Tus datos</b><br>Quedan en una carpeta de tu computadora. No le escribe a tus clientes: redacta y vos mandás. No recorre portales con robots: usa sus alertas.</div>
   </div>
   <p class="nota" style="margin-top:5mm">El piloto con el plugin es gratis durante dos semanas. Después elegís el plan que te sirva. Claude es un producto de Anthropic; IO-RealState es un desarrollo de IO Consulting.</p>
+</section>
+
+<section class="pagina">
+  <p class="ceja">Así se usa</p>
+  <p class="grande">Le escribís como a un compañero, <em>te devuelve el trabajo</em>.</p>
+  <div class="dos">
+    {img('plugin-1-busquedas', 'Tus búsquedas activas, con lo obligatorio y lo deseable de cada cliente.')}
+    {img('plugin-3-mensaje', 'El mensaje para el cliente, escrito como escribís vos. Lo mandás desde tu WhatsApp.')}
+  </div>
+  <div style="max-width:120mm;margin:4mm auto 0">
+    {img('plugin-4-tasacion', 'La tasación con comparables, lista para revisar y firmar.')}
+  </div>
 </section>
 
 <section class="pagina">
