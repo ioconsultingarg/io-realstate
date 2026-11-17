@@ -61,6 +61,8 @@ python manual/capturas.py && python manual/generar_manual.py && cd manual && pyt
 9. [09-ASESOR-INDIVIDUAL.md](09-ASESOR-INDIVIDUAL.md) — **plan para el asesor individual** (pedido de un agente
    en actividad): búsquedas que avisan con las alertas de los portales, borradores en su voz, ACM, agenda y
    tareas. MVP de 5 a 7 semanas.
+10. [10-REFERENCIA-PLAYBOOK.md](10-REFERENCIA-PLAYBOOK.md) — el playbook de Real Growth: sus "agentes" son Claude
+   configurado (proyectos, skills, conectores); embudo completo y camino A (plugin para Claude) vs camino B (SaaS).
 
 ## En una línea
 
