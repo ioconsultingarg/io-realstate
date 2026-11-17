@@ -44,6 +44,17 @@ def img(nombre: str, pie: str = '', clase: str = '') -> str:
 
 
 CSS_VENTA = """
+.chat { background: #15130f; color: #f2ede4; border-radius: 4mm; padding: 5mm; font-size: 9.5pt; line-height: 1.45; }
+.chat .yo { background: #f2ede4; color: #15130f; border-radius: 3mm 3mm 1mm 3mm; padding: 2.5mm 3.5mm; margin: 0 0 4mm auto; width: fit-content; max-width: 80%; }
+.chat .ia { font-family: 'Geist', sans-serif; }
+.chat .ia b { color: #e3b968; font-weight: 600; }
+.chat .ok { color: #5cc996; } .chat .no { color: #f0806f; }
+.chat .meta { color: #9a9184; font-size: 8pt; }
+.dos { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; align-items: start; }
+.lista-limpia { list-style: none; padding: 0; margin: 0; }
+.lista-limpia li { padding: 2mm 0; border-bottom: 1px solid var(--line); }
+.lista-limpia li b { color: var(--ink); }
+.marco { border: 1px solid var(--line); border-radius: 3mm; padding: 4mm 5mm; }
 .pagina { break-after: page; }
 .pagina:last-child { break-after: auto; }
 .grande { font-family: 'Instrument Serif', Georgia, serif; font-size: 30pt; line-height: 1.05; color: var(--ink); margin: 2mm 0 5mm; }
@@ -161,6 +172,42 @@ def main():
 </section>
 
 <section class="pagina">
+  <p class="ceja">Piloto gratis</p>
+  <p class="grande">Probalo gratis en <em>tu Claude</em>, con tus clientes.</p>
+  <p>Durante el piloto, IO-RealState se instala como <b>plugin en la app de escritorio de Claude</b>. Trabaja con tu Gmail, tu Google Calendar y una carpeta de tu computadora. En 10 minutos está andando y lo probás con tus búsquedas reales.</p>
+  <div class="dos" style="margin-top:5mm">
+    <div>
+      <ul class="lista-limpia">
+        <li><b>Tu perfil y tu forma de escribir.</b> Le pegás mensajes tuyos y aprende cómo escribís.</li>
+        <li><b>Búsquedas de compradores.</b> Lo obligatorio y lo deseable de cada cliente, y los filtros para crear las alertas en cada portal.</li>
+        <li><b>Revisión de alertas.</b> Lee en tu Gmail los mails de Zonaprop, Argenprop y Mercado Libre, saca duplicados y te dice qué coincide y por qué. Todas las mañanas, si querés.</li>
+        <li><b>Tasación.</b> Comparables, precio por m² y rango, en un informe que firmás vos.</li>
+        <li><b>Mensajes en tu voz.</b> Borradores que mandás vos desde tu WhatsApp.</li>
+        <li><b>Recordatorios y visitas</b> en tu Google Calendar.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="chat">
+        <p class="yo">Revisá las alertas</p>
+        <div class="ia">
+          <p style="margin:0 0 2mm">23 avisos nuevos · 7 duplicados · 12 no cumplían</p>
+          <p style="margin:0"><b>Familia Ocampo · 2</b></p>
+          <p style="margin:1mm 0 0">1. Melián 3120, Coghlan · USD 289.000 · 94<br><span class="ok">✓ terraza propia</span> · <span class="ok">✓ a 4 cuadras del colegio</span> · <span class="no">✗ sin cochera</span></p>
+          <p style="margin:2mm 0 0">2. Pedraza 2450, Villa Urquiza · USD 262.000 · 85<br><span class="ok">✓ patio</span> · <span class="no">✗ escalera al 1.er piso</span></p>
+          <p style="margin:3mm 0 0">¿Cuáles te sirven? Te armo el mensaje para cada cliente.</p>
+        </div>
+      </div>
+      <p class="nota" style="margin-top:2mm">Ejemplo con datos ficticios.</p>
+    </div>
+  </div>
+  <div class="dos" style="margin-top:6mm">
+    <div class="marco"><b style="color:var(--ink)">Qué necesitás</b><br>La app de escritorio de Claude con tu cuenta (el plan de Claude lo contratás vos), el Gmail donde te llegan las alertas y 10 minutos para instalarlo.</div>
+    <div class="marco"><b style="color:var(--ink)">Tus datos</b><br>Quedan en una carpeta de tu computadora. No le escribe a tus clientes: redacta y vos mandás. No recorre portales con robots: usa sus alertas.</div>
+  </div>
+  <p class="nota" style="margin-top:5mm">El piloto con el plugin es gratis durante dos semanas. Después elegís el plan que te sirva. Claude es un producto de Anthropic; IO-RealState es un desarrollo de IO Consulting.</p>
+</section>
+
+<section class="pagina">
   <p class="ceja">Planes</p>
   <p class="grande">Empezá por lo que <em>más tiempo te ahorra</em>.</p>
   <div class="planes">
@@ -193,7 +240,7 @@ def main():
   <p class="ceja" style="margin-top:7mm">Cómo empezamos</p>
   <div class="pasos">
     <div class="paso"><span class="n">01</span><b>Reunión sin costo</b>20 minutos para ver cómo trabajás hoy y qué te saca más tiempo.</div>
-    <div class="paso"><span class="n">02</span><b>Piloto con tus casos</b>Tus búsquedas y tasaciones reales durante dos semanas.</div>
+    <div class="paso"><span class="n">02</span><b>Piloto gratis</b>Instalamos el plugin en tu Claude y lo usás con tus búsquedas reales durante dos semanas.</div>
     <div class="paso"><span class="n">03</span><b>Implementación</b>Lo dejamos andando y lo seguimos con vos.</div>
   </div>
 </section>
