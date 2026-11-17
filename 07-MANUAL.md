@@ -237,7 +237,72 @@ volver al ejemplo desde **Cuenta → Volver a los datos de ejemplo**. Los datos 
 | — | Las conversaciones de los agentes y las respuestas del asistente a competencia y práctica | Las escribe Claude en el momento, con el cerebro de la inmobiliaria |
 | — | Inicio de sesión y roles | Cada persona entra con su usuario |
 
-## 11. Preguntas frecuentes
+## 11. El plugin para Claude (piloto)
+
+Para el **asesor individual**, IO-RealState también existe como **plugin de la app de escritorio de Claude**
+(Claude es un producto de Anthropic; el plugin es de IO Consulting). Es la forma de empezar el piloto gratis de dos
+semanas sin esperar el producto completo. El archivo es `plugin/io-realstate.plugin` y la guía detallada está en
+`plugin/io-realstate/README.md`.
+
+### Qué hace falta
+
+- La app de escritorio de Claude con la cuenta del asesor. El plan de Claude lo contrata el asesor.
+- Los conectores de **Gmail** (donde llegan las alertas de los portales) y **Google Calendar**, con lectura
+  "permitir siempre" y escritura "requiere aprobación".
+- Una **carpeta de trabajo** en su computadora, elegida en Cowork.
+
+### Instalación (10 minutos)
+
+1. En la app de Claude: **Ajustes → Plugins → Subir plugin** y elegir `io-realstate.plugin`.
+2. **Conectores:** conectar Gmail y Google Calendar.
+3. Abrir **Cowork**, elegir la carpeta de trabajo y escribir **"Configurá IO-RealState"**.
+
+### Qué pedirle
+
+| Para | Se le dice | Qué hace |
+|---|---|---|
+| Empezar | "Configurá IO-RealState" | Pregunta matrícula, zonas y horario, y pide 10 a 30 mensajes del asesor para aprender cómo escribe |
+| Cargar un cliente | "Nueva búsqueda: la familia Ocampo busca 4 ambientes con patio o terraza en Villa Urquiza, hasta USD 300 mil" | Separa lo obligatorio de lo deseable y guarda la ficha |
+| Crear las alertas | "Armame las alertas" | Da los filtros exactos para crear la alerta en Zonaprop, Argenprop y Mercado Libre |
+| Ver novedades | "Revisá las alertas" | Lee los mails de alertas en Gmail, saca duplicados y muestra lo que coincide con cada cliente, con el porqué |
+| Elegir | "El 1 sí, el 2 no porque tiene escalera" | Anota la elegida y aprende la regla ("no mostrar PH con escalera") |
+| Escribirle al cliente | "Armale el mensaje a Mariana" | Borrador en la voz del asesor; lo manda él desde su WhatsApp |
+| Tasar | "Armame el ACM de Ugarte 1856" | Comparables, USD/m², rango y días de venta; informe pendiente de firma |
+| Agendar | "Recordame llamar a Tomás el jueves a las 10" | Evento en Google Calendar, con aprobación |
+| Que se haga solo | "Quiero que revises las alertas todos los días a las 8" | Crea una tarea programada diaria |
+
+### Cómo funciona por dentro
+
+```mermaid
+flowchart TB
+  P[Alertas de los portales<br/>por mail] --> G[Gmail del asesor]
+  G -->|conector, solo lectura| C[Claude con el plugin<br/>IO-RealState]
+  F[(Carpeta IO-RealState<br/>perfil · búsquedas ·<br/>comparables · tasaciones)] <--> C
+  C --> R[Resumen del día<br/>con afinidad y porqué]
+  R --> A{Asesor elige}
+  A -->|me sirve| M[Borrador en su voz]
+  A -->|no| L[Aprende la regla]
+  M --> W[El asesor lo manda<br/>desde su WhatsApp]
+  C -->|con aprobación| K[Google Calendar]
+```
+
+Los datos quedan en la carpeta `IO-RealState/` de la computadora del asesor, en archivos de texto: `perfil.md`,
+una ficha por cliente en `busquedas/`, `avisos-vistos.md`, `comparables.md`, `tasaciones/` y `resumenes/`. Las
+reglas de afinidad y el método de tasación son los mismos de la demo.
+
+### Plugin y producto completo
+
+| | Plugin para Claude | Producto completo |
+|---|---|---|
+| Para quién | Asesor individual | Inmobiliaria con equipo |
+| Búsquedas, alertas, tasación, mensajes, recordatorios | ✔ | ✔ |
+| Atención automática a clientes por WhatsApp | ✘ | ✔ |
+| Panel del dueño, varios asesores, aprobaciones y auditoría | ✘ | ✔ |
+| Dónde quedan los datos | Carpeta en la computadora del asesor | Base de datos de IO-RealState |
+| Qué necesita | App de Claude con su plan, Gmail y Calendar | Cuenta de IO-RealState y WhatsApp Business |
+| Tiempo para empezar | 10 minutos | Onboarding (sección 3) |
+
+## 12. Preguntas frecuentes
 
 **¿El cliente sabe que le responde una IA?** Sí. El primer mensaje dice que es el asistente automatizado de
 la inmobiliaria y enlaza la política de privacidad. Es una regla del producto (`03`).
@@ -256,3 +321,13 @@ hagan lo que solo hace una persona: visitar, negociar y cerrar.
 admite hasta 8 participantes y la reserva Meta para cuentas de gran volumen; la alternativa (programas que
 imitan WhatsApp Web) viola los términos de Meta y puede hacer que bloqueen el número de la inmobiliaria.
 El asesor le escribe al asistente en un chat de uno a uno y el panel ordena todo por departamento.
+
+**¿El plugin le escribe a mis clientes?** No. Redacta los mensajes y el asesor los manda desde su WhatsApp. Lo
+único que escribe por su cuenta, con aprobación, son los eventos de Google Calendar.
+
+**¿Qué pasa con mis datos si uso el plugin?** Las búsquedas, tasaciones y el perfil quedan en una carpeta de la
+computadora del asesor. Para trabajar, Claude lee esos archivos y los mails de alertas; conviene no cargar DNI,
+ingresos ni documentos de clientes.
+
+**¿Por qué usa las alertas por mail y no busca directo en los portales?** Recorrer portales con robots va contra
+sus términos de uso. Las alertas son una función que los portales ofrecen a cualquier usuario y traen lo nuevo.

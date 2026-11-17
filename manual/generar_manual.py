@@ -59,7 +59,7 @@ th { text-align: left; font-weight: 600; color: var(--ink); background: var(--su
 th, td { padding: 1.8mm 2.2mm; border-bottom: 1px solid var(--line); vertical-align: top; }
 tr { break-inside: avoid; }
 pre.mermaid { background: #fff; border: 1px solid var(--line); border-radius: 3mm; padding: 4mm; text-align: center; break-inside: avoid; margin: 3mm 0 5mm; }
-pre.mermaid svg { max-width: 100%; height: auto; }
+pre.mermaid svg { max-width: 100%; max-height: 165mm; width: auto; height: auto; }
 figure { margin: 4mm 0 6mm; break-inside: avoid; }
 figure img { width: 100%; border-radius: 2.5mm; border: 1px solid var(--line); }
 figure.movil img { width: 42%; display: block; margin: 0 auto; }
@@ -117,7 +117,7 @@ def main():
   <div>
     <p class="ceja">Manual · versión demo · noviembre 2026</p>
     <h1>Cómo funciona <em>IO-RealState</em></h1>
-    <p class="bajada">Un equipo de agentes de IA, uno por departamento, que atiende y trabaja por WhatsApp con la información de tu inmobiliaria. Qué es cada pieza, qué pasa en cada flujo y cómo recorrer la demo.</p>
+    <p class="bajada">Un equipo de agentes de IA, uno por departamento, que atiende y trabaja por WhatsApp con la información de tu inmobiliaria. Qué es cada pieza, qué pasa en cada flujo, cómo usar la demo y el plugin para Claude.</p>
   </div>
   <p class="pie">IO Consulting · contacto@ioconsulting.com.ar · © 2026 Todos los derechos reservados.<br>Los datos de la demo son ficticios.</p>
 </section>
