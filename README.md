@@ -28,6 +28,13 @@ npm run dev
 
 Se publica sola en GitHub Pages con cada push que toque `demo/` (`.github/workflows/pages.yml`).
 
+## Plugin para Claude
+
+[`plugin/io-realstate.plugin`](plugin/io-realstate.plugin) — IO-RealState como plugin de la app de Claude, para el
+asesor individual: perfil y forma de escribir, búsquedas de compradores, revisión de alertas de portales en Gmail con
+afinidad explicada, tasación ACM, mensajes en su voz y recordatorios en Google Calendar. Los datos quedan en una
+carpeta de su computadora. Guía de instalación en [`plugin/io-realstate/README.md`](plugin/io-realstate/README.md).
+
 ## Para vender
 
 - [`IO-RealState-Propuesta.pdf`](IO-RealState-Propuesta.pdf) — propuesta comercial: problema, cómo funciona, qué hace,

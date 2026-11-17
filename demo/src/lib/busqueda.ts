@@ -70,10 +70,19 @@ const sinonimos: Record<string, string[]> = {
   'expensas bajas': ['expensas bajas', 'sin expensas', 'bajas expensas'],
 }
 
+/** aparece la palabra sin estar negada: "sin cochera" o "no es apto credito" cuentan como que no lo tiene */
 const contiene = (texto: string, palabra: string) => {
   const t = normalizar(texto)
   const p = normalizar(palabra)
-  return (sinonimos[p] ?? [p]).some((s) => t.includes(s))
+  return (sinonimos[p] ?? [p]).some((s) => {
+    if (s.startsWith('sin ')) return t.includes(s)
+    let i = t.indexOf(s)
+    while (i >= 0) {
+      if (!/(sin|no tiene|no es|no posee)\s+$/.test(t.slice(Math.max(0, i - 12), i))) return true
+      i = t.indexOf(s, i + 1)
+    }
+    return false
+  })
 }
 
 const mayuscula = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)

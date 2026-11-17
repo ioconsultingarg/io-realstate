@@ -1,0 +1,11 @@
+{
+  "name": "io-realstate",
+  "version": "0.1.0",
+  "description": "Asistente para asesores inmobiliarios argentinos: búsquedas de compradores con las alertas de los portales, tasación por comparables, mensajes escritos como los escribe el asesor y recordatorios en Google Calendar.",
+  "author": {
+    "name": "IO Consulting"
+  },
+  "homepage": "https://ioconsultingarg.github.io/io-realstate/",
+  "license": "UNLICENSED",
+  "keywords": ["inmobiliaria", "real estate", "tasacion", "acm", "argentina", "busquedas"]
+}
